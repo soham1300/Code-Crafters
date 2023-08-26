@@ -17,8 +17,9 @@ function TopPanel() {
         <IsDarkModeBtn>
           <IsDarkMode />
         </IsDarkModeBtn>
+        
+        <User><UserDP src={currentUser.photoURL} />{currentUser.displayName}</User>
 
-        <User>{currentUser.displayName}</User>
       </TPRight>
     </TopPanelDiv>
   );
@@ -49,8 +50,15 @@ const User = styled.div`
 
 const TPRight = styled.div`
   display: flex;
+  align-items : center;
+  justify-content : center;
 `;
 
 const IsDarkModeBtn = styled.div`
   margin-right: 1rem;
 `;
+
+const UserDP = styled.img`
+  height: 4vh;
+  border-radius: 15px;
+`

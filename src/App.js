@@ -76,7 +76,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <ToastContainer />
         <Routes>
-          <Route path="login" element={<LoginSignin toast={toast} />} />
+          <Route
+            path="login"
+            element={<LoginSignin toast={toast} isLogin={true} />}
+          />
+          <Route
+            path="signup"
+            element={<LoginSignin toast={toast} isLogin={false} />}
+          />
           <Route
             path="completesignup"
             element={<CompleteSignup toast={toast} />}

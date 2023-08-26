@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../components/Logo";
 import IsDarkMode from "../components/IsDarkMode";
@@ -20,9 +20,10 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../App";
+import { AuthContext } from "../context/AuthContext";
 
 function LoginSignin(props) {
-  const [isLogin, setIsLogin] = useState(true);
+  // const [isLogin, setIsLogin] = useState(props.login);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +32,14 @@ function LoginSignin(props) {
     "https://firebasestorage.googleapis.com/v0/b/codecrafters-6d4fe.appspot.com/o/userlogo.jpg?alt=media&token=f4ab6ae3-0560-47dc-91ea-048a480c551e";
   const navigate = useNavigate();
   const { isDarkMode } = useContext(ThemeContext);
+  const { currentUser } = useContext(AuthContext);
+  const isLogin = props.isLogin;
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/user/home");
+    }
+  }, [currentUser, navigate]);
 
   const checkUsername = async () => {
     const usersRef = collection(db, "users");
@@ -175,7 +184,11 @@ function LoginSignin(props) {
           >
             {isLogin ? "Login" : "Sign Up"}
           </LoginBtn>
-          <IsItLogin onClick={() => setIsLogin(!isLogin)}>
+          <IsItLogin
+            onClick={() => {
+              isLogin ? navigate("/signup") : navigate("/login");
+            }}
+          >
             {isLogin
               ? "Don't have account? Sign Up"
               : "Already have account? Login"}
