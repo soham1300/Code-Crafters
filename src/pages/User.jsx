@@ -19,7 +19,7 @@ function User() {
   const { isDarkMode } = useContext(ThemeContext);
   const isMobile = IsMobile();
   return (
-    <HomeDiv>
+    <HomeDiv isDarkMode={isDarkMode}>
       <TopPanel />
       <MainDiv>
         <SideBar isMobile={isMobile} />
@@ -43,6 +43,10 @@ export default User;
 const HomeDiv = styled.div`
   display: flex;
   flex-direction: column;
+  background-color: ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.bg
+      : (props) => props.theme.light.bg};
 `;
 
 const MainDiv = styled.div`

@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { ThemeContext } from "../App";
 import { AuthContext } from "../context/AuthContext";
 import IsDarkMode from "./IsDarkMode";
+import Avatar from "@mui/material/Avatar";
 
 function TopPanel() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -17,9 +18,11 @@ function TopPanel() {
         <IsDarkModeBtn>
           <IsDarkMode />
         </IsDarkModeBtn>
-        
-        <User><UserDP src={currentUser.photoURL} />{currentUser.displayName}</User>
 
+        <User>
+          <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
+          {currentUser.displayName}
+        </User>
       </TPRight>
     </TopPanelDiv>
   );
@@ -46,19 +49,18 @@ const TopPanelDiv = styled.div`
 const User = styled.div`
   font-size: 1.3rem;
   margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 `;
 
 const TPRight = styled.div`
   display: flex;
-  align-items : center;
-  justify-content : center;
+  align-items: center;
+  justify-content: center;
 `;
 
 const IsDarkModeBtn = styled.div`
   margin-right: 1rem;
 `;
-
-const UserDP = styled.img`
-  height: 4vh;
-  border-radius: 15px;
-`

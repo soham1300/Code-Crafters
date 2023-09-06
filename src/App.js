@@ -16,6 +16,7 @@ import Mentorship from "./pages/Mentorship";
 import Jobs from "./pages/Jobs";
 import Challenges from "./pages/Challenges";
 import User from "./pages/User";
+import UploadCode from "./pages/UploadCode";
 
 export const ThemeContext = createContext();
 
@@ -118,6 +119,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CodeReview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="uploadcode"
+              element={
+                <ProtectedRoute>
+                  <UploadCode />
                 </ProtectedRoute>
               }
             />
