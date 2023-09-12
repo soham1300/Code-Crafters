@@ -18,4 +18,4 @@ Code Crafters is a community-driven initiative that focuses on building real-wor
 2. **Clone the Repository**: Clone your forked repository to your local machine using the following command:
 
    ```sh
-   git clone https://github.com/your-username/code-crafters.git
+   git clone https://github.com/soham1300/Code-Crafters.git
