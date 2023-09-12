@@ -20,19 +20,26 @@ function User() {
   const isMobile = IsMobile();
   return (
     <HomeDiv isDarkMode={isDarkMode}>
-      <TopPanel />
+      <TopPanelDiv>
+        <TopPanel />
+      </TopPanelDiv>
+
       <MainDiv>
-        <SideBar isMobile={isMobile} />
-        <AllInfo isDarkMode={isDarkMode}>
-          {/* <Home />
+        <div>
+          <SideBar isMobile={isMobile} />
+        </div>
+        <div>
+          <AllInfo isDarkMode={isDarkMode}>
+            {/* <Home />
           <Search />
           <CodeReview />
           <Courses />
           <Challenges />
           <Mentorship />
           <Jobs /> */}
-          <Outlet />
-        </AllInfo>
+            <Outlet />
+          </AllInfo>
+        </div>
       </MainDiv>
     </HomeDiv>
   );
@@ -47,6 +54,7 @@ const HomeDiv = styled.div`
     props.isDarkMode
       ? (props) => props.theme.dark.bg
       : (props) => props.theme.light.bg};
+  /* position: fixed; */
 `;
 
 const MainDiv = styled.div`
@@ -55,3 +63,7 @@ const MainDiv = styled.div`
 `;
 
 const AllInfo = styled.div``;
+
+const TopPanelDiv = styled.div`
+  position: static;
+`;
