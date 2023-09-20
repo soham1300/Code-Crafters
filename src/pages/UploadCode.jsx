@@ -12,11 +12,13 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 import { AuthContext } from "../context/AuthContext";
+import validator from "validator";
 
-function UploadCode() {
+function UploadCode(props) {
   const [code, setCode] = useState("");
   const { isDarkMode } = useContext(ThemeContext);
   const onChange = React.useCallback((value, viewUpdate) => {
@@ -26,23 +28,60 @@ function UploadCode() {
   const [isEnterCode, setIsEnterCode] = useState(true);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const [textareaValue, setTextareaValue] = useState("");
+  const [url, setUrl] = useState();
 
   const clickBack = () => {
     navigate(-1);
   };
 
   const clickSubmit = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "codeReview"), {
-        code: code,
-        time: new Date().toLocaleTimeString(),
-        date: new Date().toLocaleDateString(),
-      });
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        codeReview: arrayUnion(docRef.id),
-      });
-      console.log(currentUser.uid);
-    } catch (e) {}
+    if (
+      isEnterCode &&
+      code !== "//Enter your code" &&
+      code !== "" &&
+      textareaValue
+    ) {
+      try {
+        const docRef = await addDoc(collection(db, "codeReview"), {
+          userID: currentUser.uid,
+          code: code,
+          instruction: textareaValue,
+          type: "code",
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          timestamp: serverTimestamp(),
+          reviews: [],
+        });
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          codeReview: arrayUnion(docRef.id),
+        });
+        navigate("/user/codereview");
+      } catch (e) {
+        props.toast.error("Error submitting code review");
+      }
+    } else if (!isEnterCode && validator.isURL(url) && textareaValue) {
+      try {
+        const docRef = await addDoc(collection(db, "codeReview"), {
+          userID: currentUser.uid,
+          code: url,
+          instruction: textareaValue,
+          type: "url",
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          timestamp: serverTimestamp(),
+          reviews: [],
+        });
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          codeReview: arrayUnion(docRef.id),
+        });
+        navigate("/user/codereview");
+      } catch (e) {
+        props.toast.error("Error submitting code review");
+      }
+    } else {
+      props.toast.error("Please fill all fields");
+    }
   };
 
   return (
@@ -76,7 +115,10 @@ function UploadCode() {
         />
       </CodeMirrorDiv>
       <LinkDiv isEnterCode={isEnterCode}>
-        <LinkInput isDarkMode={isDarkMode} />
+        <LinkInput
+          isDarkMode={isDarkMode}
+          onChange={(e) => setUrl(e.target.value)}
+        />
       </LinkDiv>
       <Instructions>
         <InstTitle>Instructions for Reviewers</InstTitle>
@@ -86,6 +128,7 @@ function UploadCode() {
           name="comment"
           form="usrform"
           isDarkMode={isDarkMode}
+          onChange={(e) => setTextareaValue(e.target.value)}
         />
       </Instructions>
       <BackBtn isDarkMode={isDarkMode} onClick={clickBack}>
@@ -215,6 +258,9 @@ const Textarea = styled.textarea`
     border-color: ${(props) => props.theme.mainColor};
     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
   }
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const BackBtn = styled(CodeBtn)`
@@ -229,10 +275,14 @@ const BackBtn = styled(CodeBtn)`
 
 const SubmitBtn = styled(CodeBtn)`
   margin-bottom: 20px;
+
   &:hover {
     cursor: pointer;
     border: 2px solid ${(props) => props.theme.mainColorHover};
     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
     background-color: ${(props) => props.theme.mainColor};
+  }
+  @media (max-width: 768px) {
+    margin-left: 20vw;
   }
 `;

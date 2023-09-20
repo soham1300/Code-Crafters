@@ -17,10 +17,12 @@ import {
   query,
   where,
   getDocs,
+  serverTimestamp,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../App";
 import { AuthContext } from "../context/AuthContext";
+import validator from "validator";
 
 function LoginSignin(props) {
   // const [isLogin, setIsLogin] = useState(props.login);
@@ -63,6 +65,8 @@ function LoginSignin(props) {
         return props.toast.error("Paasword must be at least 6 characters");
       } else if (password !== confirmPassword) {
         return props.toast.error("Passwords do not match");
+      } else if (!validator.isEmail(email)) {
+        return props.toast.error("Email is not proper");
       } else {
         isLogin ? Login() : SignUp();
       }
@@ -73,6 +77,8 @@ function LoginSignin(props) {
         return props.toast.error("Passwords required");
       } else if (password.length < 6) {
         return props.toast.error("Paasword must be at least 6 characters");
+      } else if (!validator.isEmail(email)) {
+        return props.toast.error("Email is not proper");
       } else {
         isLogin ? Login() : SignUp();
       }
@@ -103,6 +109,7 @@ function LoginSignin(props) {
           displayName,
           photoURL: downloadURL,
           email,
+          timestamp: serverTimestamp(),
         });
         // saveLogin(user.uid);
         navigate("/completesignup");

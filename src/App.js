@@ -118,7 +118,7 @@ function App() {
               path="codereview"
               element={
                 <ProtectedRoute>
-                  <CodeReview />
+                  <CodeReview toast={toast} />
                 </ProtectedRoute>
               }
             />
@@ -126,7 +126,7 @@ function App() {
               path="uploadcode"
               element={
                 <ProtectedRoute>
-                  <UploadCode />
+                  <UploadCode toast={toast} />
                 </ProtectedRoute>
               }
             />

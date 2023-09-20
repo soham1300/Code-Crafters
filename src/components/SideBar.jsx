@@ -27,19 +27,21 @@ function SideBar(props) {
             if (level === 0) {
               return {
                 color: isDarkMode ? "#fff" : "#1b2225",
-                backgroundColor: active
-                  ? isDarkMode
-                    ? "#29343d !important"
-                    : "#b3b2b2 !important"
-                  : undefined,
+                backgroundColor: active && "#663de5",
+                // ? isDarkMode
+                //   ? "#29343d !important"
+                //   : "#b3b2b2 !important"
+                // : undefined,
                 fontWeight: active && "bold !important",
                 padding: "0.6rem",
                 margin: "0rem",
                 borderRadius: "0.6rem 0 0 0.6rem",
                 "&:hover": {
-                  backgroundColor: isDarkMode
-                    ? "#29343d !important"
-                    : "#b3b2b2 !important",
+                  backgroundColor: !active
+                    ? isDarkMode
+                      ? "#29343d !important"
+                      : "#b3b2b2 !important"
+                    : "#663de5",
                   // color: "white !important",
                   fontWeight: "bold !important",
                 },
