@@ -18,10 +18,9 @@ function TopPanel() {
         <IsDarkModeBtn>
           <IsDarkMode />
         </IsDarkModeBtn>
-
         <User>
           <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
-          {currentUser.displayName}
+          <UserName>{currentUser.displayName}</UserName>
         </User>
       </TPRight>
     </TopPanelDiv>
@@ -58,9 +57,15 @@ const User = styled.div`
 const TPRight = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 `;
 
 const IsDarkModeBtn = styled.div`
   margin-right: 1rem;
+`;
+
+const UserName = styled.p`
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

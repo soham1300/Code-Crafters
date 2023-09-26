@@ -8,6 +8,11 @@ import {
   limit,
   getDocs,
   startAfter,
+  doc,
+  updateDoc,
+  arrayUnion,
+  onSnapshot,
+  increment,
 } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 // import { styled } from "@mui/material/styles";
@@ -29,15 +34,9 @@ import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import IsMobile from "../components/IsMobile";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import {
-  // addDoc,
-  doc,
-  updateDoc,
-  arrayUnion,
-  onSnapshot,
-  // serverTimestamp,
-} from "firebase/firestore";
 import { AuthContext } from "../context/AuthContext";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 
 function CodeReview(props) {
   const [reviews, setReviews] = useState([]);
@@ -45,22 +44,26 @@ function CodeReview(props) {
   const { isDarkMode } = useContext(ThemeContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const first = query(
-        collection(db, "codeReview"),
-        orderBy("timestamp"),
-        limit(2)
-      );
-      const documentSnapshots = await getDocs(first);
+    try {
+      const fetchData = async () => {
+        const first = query(
+          collection(db, "codeReview"),
+          orderBy("timestamp"),
+          limit(2)
+        );
+        const documentSnapshots = await getDocs(first);
 
-      // Get last visible document
-      setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+        // Get last visible document
+        setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
 
-      // Get data for first 10 documents
-      setReviews(documentSnapshots.docs.map((doc) => [doc.data(), doc.id]));
-    };
-    fetchData();
-  }, []);
+        // Get data for first 10 documents
+        setReviews(documentSnapshots.docs.map((doc) => [doc.data(), doc.id]));
+      };
+      fetchData();
+    } catch {
+      props.toast("Something went wrong");
+    }
+  }, [props]);
   console.log(reviews);
   // Load more reviews
   const loadMore = async () => {
@@ -81,7 +84,9 @@ function CodeReview(props) {
         ...prevReviews,
         ...documentSnapshots.docs.map((doc) => [doc.data(), doc.id]),
       ]);
-    } catch {}
+    } catch {
+      props.toast("No more code reviews available");
+    }
   };
 
   function CodeReviewComp({ review, reviewId }) {
@@ -89,13 +94,30 @@ function CodeReview(props) {
     const timestamp = review.timestamp.toDate();
     const [reviews, setReviews] = useState(review);
     const isMobile = IsMobile();
-    const [userReview, setUserReview] = useState();
+    const [userReview, setUserReview] = useState("");
     const { currentUser } = useContext(AuthContext);
+
     useEffect(() => {
       onSnapshot(doc(db, "codeReview", reviewId), (doc) => {
         setReviews(doc.data());
       });
     }, [reviewId]);
+
+    const Increment = async (index) => {
+      const reviewDoc = doc(db, "codeReview", reviewId);
+      const updatedReviews = [...reviews]; // Use a different variable name
+      updatedReviews[index].votes = increment(1);
+
+      try {
+        await updateDoc(reviewDoc, {
+          reviews: updatedReviews,
+        });
+      } catch (error) {
+        console.error("Error incrementing votes:", error);
+      }
+    };
+    const Decrement = () => {};
+
     const SubmitReview = async () => {
       try {
         await updateDoc(doc(db, "codeReview", reviewId), {
@@ -104,6 +126,7 @@ function CodeReview(props) {
             uid: currentUser.uid,
             userName: currentUser.displayName,
             photoURL: currentUser.photoURL,
+            votes: 0,
           }),
         });
         setUserReview("");
@@ -152,7 +175,7 @@ function CodeReview(props) {
           />
           <CardContent
             style={{
-              backgroundColor: isDarkMode ? "#1b2225" : "#c5c6c7",
+              backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
               color: isDarkMode ? "white" : "black",
             }}
           >
@@ -163,7 +186,7 @@ function CodeReview(props) {
           <CardMedia
             component="code"
             style={{
-              backgroundColor: isDarkMode ? "#1b2225" : "#c5c6c7",
+              backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
               color: isDarkMode ? "white" : "black",
             }}
           >
@@ -182,7 +205,7 @@ function CodeReview(props) {
           <CardActions
             disableSpacing
             style={{
-              backgroundColor: isDarkMode ? "#1b2225" : "#c5c6c7",
+              backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
               color: isDarkMode ? "white" : "black",
             }}
           >
@@ -222,9 +245,16 @@ function CodeReview(props) {
                 },
               }}
             >
-              {reviews.reviews.map((review) => {
+              {reviews.reviews.map((review, index) => {
                 return (
                   <>
+                    <UpDwnVote>
+                      <KeyboardArrowDownOutlinedIcon
+                        onClick={Increment(index)}
+                      />
+                      {review.votes}
+                      <KeyboardArrowUpOutlinedIcon onClick={Decrement} />
+                    </UpDwnVote>
                     <ReviewUserData>
                       <Avatar
                         alt={review.userName}
@@ -260,11 +290,6 @@ function CodeReview(props) {
 
   return (
     <CodeReviewDiv isDarkMode={isDarkMode}>
-      {/* <UploadCode>
-        I don't have any idea what to do here. So plz click
-        <Link to="/user/uploadcode">Here</Link>
-        Upload your code to review
-      </UploadCode> */}
       <CodeReviewComponent>
         {reviews.map((review) => (
           <CodeReviewComp
@@ -274,9 +299,14 @@ function CodeReview(props) {
           />
         ))}
       </CodeReviewComponent>
-      <LoadMoreBtn onClick={loadMore} isDarkMode={isDarkMode}>
+      {/* <LoadMoreBtn onClick={loadMore} isDarkMode={isDarkMode}>
         Load More
-      </LoadMoreBtn>
+      </LoadMoreBtn> */}
+      {reviews.length > 0 && reviews.length % 2 === 0 && (
+        <LoadMoreBtn onClick={loadMore} isDarkMode={isDarkMode}>
+          Load More
+        </LoadMoreBtn>
+      )}
     </CodeReviewDiv>
   );
 }
@@ -397,3 +427,5 @@ const LoadMoreBtn = styled.button`
     margin: 0 30vw;
   }
 `;
+
+const UpDwnVote = styled.div``;

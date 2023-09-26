@@ -17,7 +17,7 @@ function SideBar(props) {
   return (
     <Sidebar
       backgroundColor={isDarkMode ? "#1b2225" : "#D8D9DA"}
-      style={{ height: "93vh" }}
+      style={{ height: "93vh", width: "16vw" }}
       collapsedWidth="3.5rem"
       collapsed={props.isMobile ? true : false}
     >

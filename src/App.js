@@ -17,6 +17,8 @@ import Jobs from "./pages/Jobs";
 import Challenges from "./pages/Challenges";
 import User from "./pages/User";
 import UploadCode from "./pages/UploadCode";
+import Profile from "./pages/Profile";
+import UserInfo from "./pages/UserInfo";
 
 export const ThemeContext = createContext();
 
@@ -50,6 +52,7 @@ const useThemeDetector = () => {
 
 function App() {
   const { currentUser } = useContext(AuthContext);
+
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
       return <Navigate to="/login" />;
@@ -110,7 +113,7 @@ function App() {
               path="search"
               element={
                 <ProtectedRoute>
-                  <Search />
+                  <Search toast={toast} />
                 </ProtectedRoute>
               }
             />
@@ -162,6 +165,23 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path=":userId"
+              element={
+                <ProtectedRoute>
+                  <Profile toast={toast} />
+                </ProtectedRoute>
+              }
+            >
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <UserInfo toast={toast} />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/login" />} />
