@@ -16,6 +16,7 @@
     "@uiw/codemirror-theme-github": "^4.21.13",
     "@uiw/react-codemirror": "^4.21.13",
     "firebase": "^10.1.0",
+    "firebase-admin": "^11.11.0",
     "random-gradient": "^0.0.2",
     "react": "^18.2.0",
     "react-dark-mode-toggle": "^0.2.0",
@@ -53,5 +54,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "description": "Welcome to the Code Crafters repository! This repository is dedicated to fostering a community of coding enthusiasts, learners, and experts who come together to collaborate, learn, and create amazing projects. Whether you're a seasoned developer or just starting out, there's a place for you in our community.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

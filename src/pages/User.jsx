@@ -28,7 +28,7 @@ function User() {
         <div>
           <SideBar isMobile={isMobile} />
         </div>
-        <div>
+        <AllInfoDiv>
           <AllInfo isDarkMode={isDarkMode}>
             {/* <Home />
           <Search />
@@ -39,7 +39,7 @@ function User() {
           <Jobs /> */}
             <Outlet />
           </AllInfo>
-        </div>
+        </AllInfoDiv>
       </MainDiv>
     </HomeDiv>
   );
@@ -66,4 +66,8 @@ const AllInfo = styled.div``;
 
 const TopPanelDiv = styled.div`
   position: static;
+`;
+
+const AllInfoDiv = styled.div`
+  flex-grow: 1;
 `;

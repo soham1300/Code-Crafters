@@ -330,8 +330,6 @@ const ReviewDiv = styled.div`
 const CodeReviewDiv = styled.div`
   display: flex;
   flex-direction: column;
-
-  width: 83vw;
   height: 93vh;
   overflow: auto;
   color: ${(props) =>

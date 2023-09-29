@@ -148,7 +148,7 @@ const UploadCodeDiv = styled.div`
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  width: 83vw;
+  width: 100%;
   height: 93vh;
   overflow: auto;
   &::-webkit-scrollbar {

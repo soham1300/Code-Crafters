@@ -170,7 +170,7 @@ const SearchInput = styled.input.attrs({
   type: "text",
   placeholder: "Search",
 })`
-  width: 81vw;
+  width: 80vw;
   height: 5vh;
   padding-left: 1vw;
   margin-top: 1vw;

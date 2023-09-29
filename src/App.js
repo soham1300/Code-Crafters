@@ -19,6 +19,7 @@ import User from "./pages/User";
 import UploadCode from "./pages/UploadCode";
 import Profile from "./pages/Profile";
 import UserInfo from "./pages/UserInfo";
+import UserCodeReview from "./pages/UserCodeReview";
 
 export const ThemeContext = createContext();
 
@@ -178,6 +179,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <UserInfo toast={toast} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="codereview"
+                element={
+                  <ProtectedRoute>
+                    <UserCodeReview toast={toast} />
                   </ProtectedRoute>
                 }
               />

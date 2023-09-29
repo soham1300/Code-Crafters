@@ -15,12 +15,13 @@ function Profile(props) {
   const { isDarkMode } = useContext(ThemeContext);
   const location = useLocation();
   const { userData, updateUser } = useUserContext();
+  const userId = params.userId;
 
   useEffect(() => {
     async function fetchData() {
       const q = query(
         collection(db, "users"),
-        where("displayName", "==", params.userId)
+        where("displayName", "==", userId)
       );
       try {
         const querySnapshot = await getDocs(q);
@@ -29,11 +30,11 @@ function Profile(props) {
           updateUser(doc.data());
         });
       } catch (error) {
-        props.toast.error("Error fetching data");
+        console.log("Error getting documents: ", error);
       }
     }
     fetchData();
-  }, [params.userId, props, updateUser]);
+  }, [userId]);
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -66,13 +67,13 @@ function Profile(props) {
             Info
           </NavbarLink>
           <NavbarLink
-            href="#"
             isDarkMode={isDarkMode}
             className={
               location.pathname === `/user/${params.userId}/codereview`
                 ? "active"
                 : ""
             }
+            onClick={() => navigate(`/user/${params.userId}/codereview`)}
           >
             Code Reviews
           </NavbarLink>
@@ -103,9 +104,11 @@ function Profile(props) {
 export default Profile;
 
 const ProfileDiv = styled.div`
-  width: 83vw;
+  width: 100%;
   height: 90vh;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Card = styled.div`
