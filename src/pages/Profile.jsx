@@ -1,39 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 import styled from "styled-components";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import gradient from "random-gradient";
-import { useContext } from "react";
 import { ThemeContext } from "../App";
-import { useUserContext } from "../context/UserContex";
+import { UserContext } from "../context/UserContex";
+import { AuthContext } from "../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../DB/FirebaseConfig";
 
-function Profile(props) {
+function Profile({ toast }) {
   const params = useParams();
   const navigate = useNavigate();
   const { isDarkMode } = useContext(ThemeContext);
   const location = useLocation();
-  const { userData, updateUser } = useUserContext();
+  const { userData, updateUser } = useContext(UserContext);
   const userId = params.userId;
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    async function fetchData() {
-      const q = query(
-        collection(db, "users"),
-        where("displayName", "==", userId)
-      );
-      try {
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-          updateUser(doc.data());
-        });
-      } catch (error) {
-        console.log("Error getting documents: ", error);
-      }
+    try {
+      const fetchData = async () => {
+        // const querySnapshot = await getDocs(q);
+        // querySnapshot.forEach((doc) => {
+        //   console.log(doc.id, " => ", doc.data());
+        //   console.log("UserProfile");
+        //   updateUser(doc.data());
+        // });
+        const userData = await getDoc(doc(db, "users", userId));
+        updateUser(userData.data());
+      };
+      fetchData();
+    } catch (error) {
+      toast.error("Error getting documents: ", error);
     }
-    fetchData();
   }, [userId]);
   if (!userData) {
     return <div>Loading...</div>;
@@ -54,7 +56,31 @@ function Profile(props) {
           <ProfileName isDarkMode={isDarkMode}>
             {userData.displayName}
           </ProfileName>
-          <Btn isDarkMode={isDarkMode}>Follow</Btn>
+          <Buttons>
+            <Btn
+              isDarkMode={isDarkMode}
+              isCurrentUser={userData.uid === currentUser.uid}
+            >
+              Follow
+            </Btn>
+            {/* <Btn isDarkMode={isDarkMode}>Message</Btn> */}
+            {userData.uid === currentUser.uid && (
+              <EditProfileBtn isDarkMode={isDarkMode}>
+                Edit Profile
+              </EditProfileBtn>
+            )}
+            {userData.uid === currentUser.uid && (
+              <LogoutBtn
+                isDarkMode={isDarkMode}
+                onClick={() => {
+                  signOut(auth);
+                  navigate("/");
+                }}
+              >
+                Logout
+              </LogoutBtn>
+            )}
+          </Buttons>
         </ProfileBtn>
         <NavbarWrapper isDarkMode={isDarkMode}>
           <NavbarLink
@@ -109,6 +135,19 @@ const ProfileDiv = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: column;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #555;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #333;
+  }
 `;
 
 const Card = styled.div`
@@ -150,6 +189,14 @@ const CoverPhoto = styled.div`
         : (props) => props.theme.light.primary};
     padding: 5px;
   }
+  @media (max-width: 768px) {
+    height: 15vh;
+    & img {
+      width: 100px;
+      bottom: -50px;
+      left: 10px;
+    }
+  }
 `;
 
 const ProfileName = styled.h3`
@@ -159,29 +206,27 @@ const ProfileName = styled.h3`
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
+  @media (max-width: 768px) {
+    margin: 10px 0 0 10px;
+  }
 `;
 
 const Btn = styled.button`
   margin: 25px 0 0 15px;
-  background: ${(props) => props.theme.mainColor};
   padding: 10px 25px;
   border-radius: 3px;
   border: 1px solid ${(props) => props.theme.mainColor};
   font-weight: bold;
-  font-family: Montserrat;
   cursor: pointer;
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
   transition: 0.2s;
-
-  &:last-of-type {
-    background: transparent;
-  }
-
+  background: transparent;
+  display: ${(props) => (props.isCurrentUser ? "none" : "block")};
   &:hover {
-    background: ${(props) => props.theme.mainColorHover};
+    background: ${(props) => props.theme.mainColor};
   }
 `;
 
@@ -190,6 +235,7 @@ const ProfileBtn = styled.div`
   flex-direction: row;
   align-items: center;
   @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
@@ -251,3 +297,12 @@ const NavbarLink = styled.a`
 //     background-color: #fff;
 //   }
 // `;
+
+const EditProfileBtn = styled(Btn)``;
+
+const LogoutBtn = styled(Btn)``;
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+`;

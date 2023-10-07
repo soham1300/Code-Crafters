@@ -20,6 +20,9 @@ import UploadCode from "./pages/UploadCode";
 import Profile from "./pages/Profile";
 import UserInfo from "./pages/UserInfo";
 import UserCodeReview from "./pages/UserCodeReview";
+import AdminLogin from "./pages/AdminLogin";
+import Admin from "./pages/Admin";
+import AddChallenges from "./pages/AddChallenges";
 
 export const ThemeContext = createContext();
 
@@ -93,6 +96,33 @@ function App() {
             path="completesignup"
             element={<CompleteSignup toast={toast} />}
           />
+          <Route path="admin-login" element={<AdminLogin toast={toast} />} />
+          <Route path="admin" element={<Admin toast={toast} />}>
+            <Route
+              path="users"
+              element={
+                <ProtectedRoute>
+                  <Search toast={toast} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path=":userId"
+              element={
+                <ProtectedRoute>
+                  <Profile toast={toast} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="add-challenges"
+              element={
+                <ProtectedRoute>
+                  <AddChallenges toast={toast} />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
           <Route
             path="user"
             // index

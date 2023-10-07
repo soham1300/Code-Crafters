@@ -70,4 +70,18 @@ const TopPanelDiv = styled.div`
 
 const AllInfoDiv = styled.div`
   flex-grow: 1;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #555;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #333;
+  }
 `;

@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB080oWM6DiVwNtZFBYSMtHH1XD9RHFgsA",
@@ -17,9 +17,4 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const storage = getStorage();
-export const db = getFirestore();
-// Connect to Firebase Emulator for Firestore
-if (window.location.hostname === "localhost") {
-  // The emulator's default address is "localhost" with port 8080
-  connectFirestoreEmulator(db, "localhost", 8080);
-}
+export const db = getFirestore(app);

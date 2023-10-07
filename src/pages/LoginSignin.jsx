@@ -38,10 +38,11 @@ function LoginSignin(props) {
   const isLogin = props.isLogin;
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && currentUser.email !== "admin@gmail.com") {
       navigate("/user/home");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser]);
+  console.log(currentUser);
 
   const checkUsername = async () => {
     const usersRef = collection(db, "users");

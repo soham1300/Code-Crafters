@@ -5,10 +5,12 @@ import { ThemeContext } from "../App";
 import { AuthContext } from "../context/AuthContext";
 import IsDarkMode from "./IsDarkMode";
 import Avatar from "@mui/material/Avatar";
+import { useNavigate } from "react-router-dom";
 
-function TopPanel() {
+function TopPanel({ admin }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <TopPanelDiv isDarkMode={isDarkMode}>
       <div>
@@ -18,10 +20,14 @@ function TopPanel() {
         <IsDarkModeBtn>
           <IsDarkMode />
         </IsDarkModeBtn>
-        <User>
-          <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
-          <UserName>{currentUser.displayName}</UserName>
-        </User>
+        {admin ? (
+          <UserName>{admin}</UserName>
+        ) : (
+          <User onClick={() => navigate(`/user/${currentUser.uid}`)}>
+            <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
+            <UserName>{currentUser.displayName}</UserName>
+          </User>
+        )}
       </TPRight>
     </TopPanelDiv>
   );
@@ -52,6 +58,7 @@ const User = styled.div`
   align-items: center;
   justify-content: center;
   gap: 5px;
+  cursor: pointer;
 `;
 
 const TPRight = styled.div`

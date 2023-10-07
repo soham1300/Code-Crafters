@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 import IsMobile from "../components/IsMobile";
+import { useLocation } from "react-router-dom";
 
 function Search({ toast }) {
   const { isDarkMode } = useContext(ThemeContext);
@@ -23,6 +24,8 @@ function Search({ toast }) {
   const isMobile = IsMobile();
   const [search, setSearch] = useState();
   const [searchUser, setSearchUser] = useState();
+  const location = useLocation();
+  const isAdmin = location.pathname.includes("admin");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -44,7 +47,7 @@ function Search({ toast }) {
         const first = query(
           collection(db, "users"),
           orderBy("timestamp", "desc"),
-          limit(2)
+          limit(5)
         );
         const documentSnapshots = await getDocs(first);
 
@@ -66,7 +69,7 @@ function Search({ toast }) {
         collection(db, "users"),
         orderBy("timestamp"),
         startAfter(lastUser),
-        limit(2)
+        limit(5)
       );
       const documentSnapshots = await getDocs(next);
 
@@ -85,16 +88,18 @@ function Search({ toast }) {
   console.log(user);
   return (
     <SearchDiv>
-      <SearchInput
-        isDarkMode={isDarkMode}
-        onChange={(e) => {
-          setSearch(e.target.value);
-        }}
-        onKeyPress={handleKeyPress}
-      />
-      <VerticalLine />
+      <SearchInputAbove isDarkMode={isDarkMode}>
+        <SearchInput
+          isDarkMode={isDarkMode}
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+          onKeyPress={handleKeyPress}
+        />
+      </SearchInputAbove>
+
       <UserTitle isDarkMode={isDarkMode}>
-        {searchUser ? `Searched "${search}"` : "New Users"}
+        {search ? `Searched "${search}"` : "New Users"}
       </UserTitle>
       <Users>
         <NewUsers>
@@ -103,14 +108,14 @@ function Search({ toast }) {
                 return isMobile ? (
                   <UserProfileMobile userData={userData} />
                 ) : (
-                  <UserProfileCard userData={userData} />
+                  <UserProfileCard userData={userData} isAdmin={isAdmin} />
                 );
               })
             : user.map((userData) => {
                 return isMobile ? (
                   <UserProfileMobile userData={userData[0]} />
                 ) : (
-                  <UserProfileCard userData={userData[0]} />
+                  <UserProfileCard userData={userData[0]} isAdmin={isAdmin} />
                 );
               })}
 
@@ -170,10 +175,9 @@ const SearchInput = styled.input.attrs({
   type: "text",
   placeholder: "Search",
 })`
-  width: 80vw;
+  width: 95%;
   height: 5vh;
   padding-left: 1vw;
-  margin-top: 1vw;
   font-size: 20px;
   /* border-bottom: #cccccc; */
   border: none;
@@ -268,9 +272,12 @@ const UserTitle = styled.h2`
       : (props) => props.theme.light.text};
 `;
 
-const VerticalLine = styled.div`
-  width: 1px;
-  height: 100%;
-  background-color: #ccc; /* You can set the color you prefer */
-  margin-left: 10px; /* Adjust the margin as needed */
+const SearchInputAbove = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid
+    ${(props) =>
+      props.isDarkMode
+        ? (props) => props.theme.dark.text
+        : (props) => props.theme.light.text};
 `;

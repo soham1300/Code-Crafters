@@ -1,8 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
-const UserContext = createContext();
-
-export const useUserContext = () => useContext(UserContext);
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);

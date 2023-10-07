@@ -11,7 +11,7 @@ function UserProfileMobile({ userData }) {
   return (
     <UsernameContainer
       isDarkMode={isDarkMode}
-      onClick={() => navigate(`/user/${user.displayName}`)}
+      onClick={() => navigate(`/user/${user.uid}`)}
     >
       <ProfileContainer>
         <ProfileImg>
@@ -40,6 +40,11 @@ const UsernameContainer = styled.div`
   border-radius: 15px;
   padding: 0 10px;
   justify-content: space-between;
+  border: 1px solid
+    ${(props) =>
+      props.isDarkMode
+        ? (props) => props.theme.dark.text
+        : (props) => props.theme.light.text};
 `;
 
 const ProfileContainer = styled.div`

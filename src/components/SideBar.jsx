@@ -32,10 +32,17 @@ function SideBar(props) {
                 //   ? "#29343d !important"
                 //   : "#b3b2b2 !important"
                 // : undefined,
+                boxShadow: active && "0 0 5px #663de5",
                 fontWeight: active && "bold !important",
                 padding: "0.6rem",
                 margin: "0rem",
                 borderRadius: "0.6rem 0 0 0.6rem",
+                border: active
+                  ? isDarkMode
+                    ? "1px solid white"
+                    : "1px solid black"
+                  : "none",
+
                 "&:hover": {
                   backgroundColor: !active
                     ? isDarkMode

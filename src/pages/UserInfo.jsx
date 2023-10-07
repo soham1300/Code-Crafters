@@ -1,23 +1,34 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { useUserContext } from "../context/UserContex";
+import { UserContext } from "../context/UserContex";
 import { ThemeContext } from "../App";
 
 function UserInfo() {
-  const { userData } = useUserContext();
+  const { userData } = useContext(UserContext);
   const { isDarkMode } = useContext(ThemeContext);
   return (
     <UserInfoDiv>
-      <Bio isDarkMode={isDarkMode} bioAvailable={userData.bio ? true : false}>
+      <Bio isDarkMode={isDarkMode} isAvail={userData.bio}>
         <BioName>About</BioName>
         <BioData>{userData.bio ? userData.bio : "-No bio"}</BioData>
       </Bio>
-      <About>
-        <UserName>Name : </UserName>
-        <Pronouns>Pronouns : </Pronouns>
-        <Location> Location :</Location>
-        <Education> Education : </Education>
-        <Company> Company : </Company>
+      <About isDarkMode={isDarkMode}>
+        <UserName isAvail={userData.userName}>
+          Name : {userData.userName}
+        </UserName>
+        <Gender isAvail={userData.gender}> Gender : {userData.gender}</Gender>
+        <Location isAvail={userData.location}>
+          {" "}
+          Location : {userData.location}
+        </Location>
+        <Education isAvail={userData.education}>
+          {" "}
+          Education : {userData.education}
+        </Education>
+        <Company isAvail={userData.company}>
+          {" "}
+          Company : {userData.company}
+        </Company>
       </About>
     </UserInfoDiv>
   );
@@ -36,12 +47,19 @@ const Bio = styled.div`
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  display: ${(props) => (props.bioAvailable ? "flex" : "none")};
+  display: ${(props) => (props.isAvail ? "flex" : "none")};
 `;
 
 const About = styled.div`
   width: 30vw;
-  background-color: red;
+  background-color: ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.primary
+      : (props) => props.theme.light.primary};
+  color: ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.text
+      : (props) => props.theme.light.text};
   border-radius: 15px;
 `;
 
@@ -56,12 +74,15 @@ const BioData = styled.p`
   padding: 0 0 15px 15px;
 `;
 
-const UserName = styled.p``;
-
-const Pronouns = styled(UserName)``;
+const UserName = styled.p`
+  margin: 15px 0 0 15px;
+  display: ${(props) => (props.isAvail ? "flex" : "none")};
+`;
 
 const Location = styled(UserName)``;
 
 const Education = styled(UserName)``;
 
 const Company = styled(UserName)``;
+
+const Gender = styled(UserName)``;
