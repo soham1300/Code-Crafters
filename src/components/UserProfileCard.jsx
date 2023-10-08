@@ -5,8 +5,8 @@ import { useContext } from "react";
 import { ThemeContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
-import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
+import { doc, updateDoc } from "firebase/firestore";
 
 function UserProfileCard({ userData, isAdmin }) {
   const navigate = useNavigate();
@@ -15,7 +15,9 @@ function UserProfileCard({ userData, isAdmin }) {
 
   const handleRemoveUser = async (userId) => {
     try {
-      await deleteDoc(doc(db, "users", userId)); // delete user doc from Firestore
+      await updateDoc(doc(db, "users", userId), {
+        ban: true,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +48,7 @@ function UserProfileCard({ userData, isAdmin }) {
       </Btn>
       {isAdmin ? (
         <Popup
-          trigger={<RemoveBtn isDarkMode={isDarkMode}>Remove</RemoveBtn>}
+          trigger={<RemoveBtn isDarkMode={isDarkMode}>Ban</RemoveBtn>}
           modal
           nested
         >

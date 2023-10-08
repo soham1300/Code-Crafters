@@ -4,17 +4,20 @@ import { ThemeContext } from "../App";
 import Select from "react-select";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
+import Rating from "@mui/material/Rating";
 
 function AddChallenges() {
   const { isDarkMode } = useContext(ThemeContext);
   const [selectedOption, setSelectedOption] = useState(null);
   const [textareaValue, setTextareaValue] = useState("");
   const [OP, setOP] = useState("");
+  const [title, setTitle] = useState("");
+  const [value, setValue] = useState(2);
   const languages = [
     { value: "javascript", label: "JavaScript" },
     { value: "python", label: "Python" },
     { value: "c++", label: "C++" },
-    { value: "java", label: "Java" },
+    { value: "c", label: "C" },
   ];
 
   const handleSelectChange = (selectedOption) => {
@@ -25,9 +28,11 @@ function AddChallenges() {
     if (selectedOption && textareaValue && OP) {
       try {
         await addDoc(collection(db, "challenges"), {
-          lang: selectedOption,
+          lang: selectedOption.value,
           description: textareaValue,
           output: OP,
+          title: title,
+          difficulty: value,
         });
       } catch (e) {
         // Handle the error
@@ -39,9 +44,9 @@ function AddChallenges() {
 
   return (
     <AddChallengesContainer isDarkMode={isDarkMode}>
-      <Title>Add Coding Challenges</Title>
+      <Title isDarkMode={isDarkMode}>Add Coding Challenges</Title>
       <SelectContainer>
-        <Label>Select Language:</Label>
+        <Label isDarkMode={isDarkMode}>Select Language:</Label>
         <Select
           options={languages}
           value={selectedOption}
@@ -49,16 +54,17 @@ function AddChallenges() {
         />
       </SelectContainer>
       <InputContainer>
-        <Label>Title:</Label>
+        <Label isDarkMode={isDarkMode}>Title:</Label>
         <Input
           type="text"
           placeholder="Enter title"
-          value={OP}
-          onChange={(e) => setOP(e.target.value)}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          isDarkMode={isDarkMode}
         />
       </InputContainer>
       <InputContainer>
-        <Label>Description:</Label>
+        <Label isDarkMode={isDarkMode}>Description:</Label>
         <Textarea
           rows="4"
           cols="50"
@@ -66,18 +72,32 @@ function AddChallenges() {
           placeholder="Enter description"
           value={textareaValue}
           onChange={(e) => setTextareaValue(e.target.value)}
+          isDarkMode={isDarkMode}
         />
       </InputContainer>
       <InputContainer>
-        <Label>Output:</Label>
+        <Label isDarkMode={isDarkMode}>Output:</Label>
         <Input
           type="text"
           placeholder="Enter Expected Output"
           value={OP}
           onChange={(e) => setOP(e.target.value)}
+          isDarkMode={isDarkMode}
         />
       </InputContainer>
-      <SubmitButton onClick={clickSubmit}>Submit</SubmitButton>
+      <InputContainer>
+        <Label isDarkMode={isDarkMode}>Difficulty:</Label>
+        <Rating
+          name="simple-controlled"
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+        />
+      </InputContainer>
+      <SubmitButton onClick={clickSubmit} isDarkMode={isDarkMode}>
+        Submit
+      </SubmitButton>
     </AddChallengesContainer>
   );
 }
@@ -86,6 +106,20 @@ export default AddChallenges;
 
 const AddChallengesContainer = styled.div`
   width: 100%;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #555;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #333;
+  }
 `;
 
 const Title = styled.h2`
@@ -135,6 +169,7 @@ const Input = styled.input`
 `;
 
 const Textarea = styled.textarea`
+  overflow: auto;
   padding: 10px;
   font-size: 16px;
   border: 2px solid

@@ -20,16 +20,14 @@ function Admin() {
           <AdminSideBar isMobile={isMobile} />
         </div>
         <AllInfoDiv>
-          <AllInfo isDarkMode={isDarkMode}>
-            {/* <Home />
+          {/* <Home />
           <Search />
           <CodeReview />
           <Courses />
           <Challenges />
           <Mentorship />
           <Jobs /> */}
-            <Outlet />
-          </AllInfo>
+          <Outlet />
         </AllInfoDiv>
       </MainDiv>
     </AdminDiv>
@@ -41,6 +39,7 @@ export default Admin;
 const AdminDiv = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: auto;
   background-color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.bg
@@ -50,9 +49,21 @@ const AdminDiv = styled.div`
 const MainDiv = styled.div`
   display: flex;
   flex-direction: row;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: #555;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #333;
+  }
 `;
-
-const AllInfo = styled.div``;
 
 const TopPanelDiv = styled.div`
   position: static;
@@ -61,6 +72,7 @@ const TopPanelDiv = styled.div`
 const AllInfoDiv = styled.div`
   flex-grow: 1;
   overflow: auto;
+  height: 92vh;
   &::-webkit-scrollbar {
     width: 10px;
   }

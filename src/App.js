@@ -176,7 +176,7 @@ function App() {
               path="challenges"
               element={
                 <ProtectedRoute>
-                  <Challenges />
+                  <Challenges toast={toast} />
                 </ProtectedRoute>
               }
             />

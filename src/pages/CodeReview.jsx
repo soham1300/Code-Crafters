@@ -129,28 +129,16 @@ const ReviewDiv = styled.div`
 
 const CodeReviewDiv = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 93vh;
-  overflow: auto;
+
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-  }
-  &::-webkit-scrollbar-track:hover {
-    background: #555;
-  }
-  &::-webkit-scrollbar-thumb:active {
-    background: #333;
-  }
 `;
 
 const LoadMoreBtn = styled.button`
