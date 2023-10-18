@@ -14,12 +14,14 @@ import {
 } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 import Rating from "@mui/material/Rating";
+import { useNavigate } from "react-router-dom";
 
 function Challenges(props) {
   const { isDarkMode } = useContext(ThemeContext);
   const [isActive, setIsActive] = useState("all");
   const [challenges, setChallenges] = useState([]);
   const [lastDoc, setLastDoc] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -35,7 +37,9 @@ function Challenges(props) {
         setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
 
         // Get data for first 10 documents
-        setChallenges(documentSnapshots.docs.map((doc) => doc.data()));
+        setChallenges(
+          documentSnapshots.docs.map((doc) => [doc.data(), doc.id])
+        );
       };
       fetchData();
     } catch {
@@ -68,6 +72,20 @@ function Challenges(props) {
   };
   if (!challenges) {
     return <div>Loading...</div>;
+  }
+
+  function ChallengeCard({ isDarkMode, title, difficulty, lang, id }) {
+    return (
+      <ChallengeSection
+        isDarkMode={isDarkMode}
+        onClick={() => navigate(`/user/challenges/${id}`)}
+      >
+        <ChallengeTitle>{title}</ChallengeTitle>
+        <ChallengeDifficulty>
+          Difficulty: <Rating name="read-only" value={difficulty} readOnly />
+        </ChallengeDifficulty>
+      </ChallengeSection>
+    );
   }
 
   return (
@@ -123,18 +141,22 @@ function Challenges(props) {
             return (
               <ChallengeCard
                 isDarkMode={isDarkMode}
-                title={challenge.title}
-                difficulty={challenge.difficulty}
-                lang={challenge.lang}
+                title={challenge[0].title}
+                difficulty={challenge[0].difficulty}
+                lang={challenge[0].lang}
+                id={challenge[1]}
+                key={index}
               />
             );
-          } else if (isActive === challenge.lang) {
+          } else if (isActive === challenge[0].lang) {
             return (
               <ChallengeCard
                 isDarkMode={isDarkMode}
-                title={challenge.title}
-                difficulty={challenge.difficulty}
-                lang={challenge.lang}
+                title={challenge[0].title}
+                difficulty={challenge[0].difficulty}
+                lang={challenge[0].lang}
+                id={challenge[1]}
+                key={index}
               />
             );
           }
@@ -148,16 +170,7 @@ function Challenges(props) {
     </ChallengesDiv>
   );
 }
-function ChallengeCard({ isDarkMode, title, difficulty, lang }) {
-  return (
-    <ChallengeSection isDarkMode={isDarkMode}>
-      <ChallengeTitle>{title}</ChallengeTitle>
-      <ChallengeDifficulty>
-        Difficulty: <Rating name="read-only" value={difficulty} readOnly />
-      </ChallengeDifficulty>
-    </ChallengeSection>
-  );
-}
+
 export default Challenges;
 
 const ChallengesDiv = styled.div`

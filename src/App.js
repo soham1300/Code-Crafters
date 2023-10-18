@@ -23,6 +23,7 @@ import UserCodeReview from "./pages/UserCodeReview";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AddChallenges from "./pages/AddChallenges";
+import CodingChallenges from "./pages/CodingChallenges";
 
 export const ThemeContext = createContext();
 
@@ -179,7 +180,16 @@ function App() {
                   <Challenges toast={toast} />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route
+                path=":id"
+                element={
+                  <ProtectedRoute>
+                    <CodingChallenges toast={toast} />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route
               path="mentorship"
               element={
