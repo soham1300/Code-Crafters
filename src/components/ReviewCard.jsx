@@ -74,7 +74,9 @@ function ReviewCard({ review, reviewId }) {
     <Card
       sx={{
         width: isMobile ? "100%" : "80%",
-        border: isDarkMode ? "1px solid #e0e0e0" : "1px solid #000000",
+        // border: isDarkMode ? "1px solid #e0e0e0" : "1px solid #000000",
+        border: "none",
+        boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
       }}
     >
       <CardHeader

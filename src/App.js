@@ -180,7 +180,8 @@ function App() {
                   <Challenges toast={toast} />
                 </ProtectedRoute>
               }
-            >
+            />
+            <Route path="codingchallenges">
               <Route
                 path=":id"
                 element={
@@ -206,30 +207,32 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path=":userId"
-              element={
-                <ProtectedRoute>
-                  <Profile toast={toast} />
-                </ProtectedRoute>
-              }
-            >
+            <Route path="profile">
               <Route
-                index
+                path=":userId"
                 element={
                   <ProtectedRoute>
-                    <UserInfo toast={toast} />
+                    <Profile toast={toast} />
                   </ProtectedRoute>
                 }
-              />
-              <Route
-                path="codereview"
-                element={
-                  <ProtectedRoute>
-                    <UserCodeReview toast={toast} />
-                  </ProtectedRoute>
-                }
-              />
+              >
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <UserInfo toast={toast} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="codereview"
+                  element={
+                    <ProtectedRoute>
+                      <UserCodeReview toast={toast} />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
             </Route>
           </Route>
 

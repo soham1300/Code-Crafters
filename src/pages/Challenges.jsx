@@ -78,9 +78,12 @@ function Challenges(props) {
     return (
       <ChallengeSection
         isDarkMode={isDarkMode}
-        onClick={() => navigate(`/user/challenges/${id}`)}
+        onClick={() => navigate(`/user/codingchallenges/${id}`)}
       >
         <ChallengeTitle>{title}</ChallengeTitle>
+        <ChallengeInfo>
+          Language: {lang}, Reward: {difficulty * 5}
+        </ChallengeInfo>
         <ChallengeDifficulty>
           Difficulty: <Rating name="read-only" value={difficulty} readOnly />
         </ChallengeDifficulty>
@@ -256,11 +259,13 @@ const ChallengeSection = styled.div`
   padding: 8px;
   margin: 10px 0;
   border-radius: 4px;
-  border: 1px solid
+  /* border: 1px solid
     ${(props) =>
-      props.isDarkMode
-        ? (props) => props.theme.dark.text
-        : (props) => props.theme.light.text};
+    props.isDarkMode
+      ? (props) => props.theme.dark.text
+      : (props) => props.theme.light.text}; */
+  border: none;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   &:hover {
     border: 1px solid ${(props) => props.theme.mainColor};
     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
@@ -271,7 +276,7 @@ const ChallengeSection = styled.div`
 const ChallengeTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 `;
 
 const ChallengeDifficulty = styled.div`
@@ -309,4 +314,8 @@ const LoadMoreBtn = styled.button`
     width: auto;
     margin: 0 30vw;
   }
+`;
+
+const ChallengeInfo = styled.div`
+  opacity: 0.7;
 `;

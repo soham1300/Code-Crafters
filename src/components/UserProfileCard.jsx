@@ -40,7 +40,7 @@ function UserProfileCard({ userData, isAdmin }) {
         onClick={() => {
           isAdmin
             ? navigate(`/admin/${user.uid}`)
-            : navigate(`/user/${user.uid}`);
+            : navigate(`/user/profile/${user.uid}`);
         }}
       >
         {" "}
@@ -94,18 +94,20 @@ export default UserProfileCard;
 
 const Card = styled.div`
   padding: 15px;
-  width: 75%;
+  width: 100%;
   background: ${(props) =>
     props.isDarkMode
-      ? (props) => props.theme.dark.primary
-      : (props) => props.theme.light.primary};
+      ? (props) => props.theme.dark.secondry
+      : (props) => props.theme.light.secondry};
   border-radius: 5px;
   text-align: center;
-  border: 1px solid
+  /* border: 1px solid
     ${(props) =>
-      props.isDarkMode
-        ? (props) => props.theme.dark.text
-        : (props) => props.theme.light.text};
+    props.isDarkMode
+      ? (props) => props.theme.dark.text
+      : (props) => props.theme.light.text}; */
+  border: none;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text

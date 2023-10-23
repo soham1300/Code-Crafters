@@ -23,7 +23,7 @@ function TopPanel({ admin }) {
         {admin ? (
           <UserName>{admin}</UserName>
         ) : (
-          <User onClick={() => navigate(`/user/${currentUser.uid}`)}>
+          <User onClick={() => navigate(`/user/profile/${currentUser.uid}`)}>
             <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
             <UserName>{currentUser.displayName}</UserName>
           </User>
@@ -40,7 +40,7 @@ const TopPanelDiv = styled.div`
   width: 100%;
   background-color: ${(props) =>
     props.isDarkMode
-      ? (props) => props.theme.dark.primary
+      ? (props) => props.theme.dark.secondry
       : (props) => props.theme.light.secondry};
   display: flex;
   justify-content: space-between;

@@ -86,20 +86,24 @@ function Profile({ toast }) {
           <NavbarLink
             isDarkMode={isDarkMode}
             className={
-              location.pathname === `/user/${params.userId}` ? "active" : ""
+              location.pathname === `/user/profile/${params.userId}`
+                ? "active"
+                : ""
             }
-            onClick={() => navigate(`/user/${params.userId}`)}
+            onClick={() => navigate(`/user/profile/${params.userId}`)}
           >
             Info
           </NavbarLink>
           <NavbarLink
             isDarkMode={isDarkMode}
             className={
-              location.pathname === `/user/${params.userId}/codereview`
+              location.pathname === `/user/profile/${params.userId}/codereview`
                 ? "active"
                 : ""
             }
-            onClick={() => navigate(`/user/${params.userId}/codereview`)}
+            onClick={() =>
+              navigate(`/user/profile/${params.userId}/codereview`)
+            }
           >
             Code Reviews
           </NavbarLink>
@@ -107,7 +111,7 @@ function Profile({ toast }) {
             href="#"
             isDarkMode={isDarkMode}
             className={
-              location.pathname === `/user/${params.userId}/challenges`
+              location.pathname === `/user/profile/${params.userId}/challenges`
                 ? "active"
                 : ""
             }

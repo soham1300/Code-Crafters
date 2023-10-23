@@ -16,8 +16,8 @@ function SideBar(props) {
 
   return (
     <Sidebar
-      backgroundColor={isDarkMode ? "#1b2225" : "#D8D9DA"}
-      style={{ height: "93vh" }}
+      backgroundColor={isDarkMode ? "#29343d" : "#D8D9DA"}
+      style={{ height: "93vh", border: "none" }}
       collapsedWidth="3.5rem"
       collapsed={props.isMobile ? true : false}
     >
@@ -37,16 +37,16 @@ function SideBar(props) {
                 padding: "0.6rem",
                 margin: "0rem",
                 borderRadius: "0.6rem 0 0 0.6rem",
-                border: active
-                  ? isDarkMode
-                    ? "1px solid white"
-                    : "1px solid black"
-                  : "none",
+                // border: active
+                //   ? isDarkMode
+                //     ? "1px solid white"
+                //     : "1px solid black"
+                //   : "none",
 
                 "&:hover": {
                   backgroundColor: !active
                     ? isDarkMode
-                      ? "#29343d !important"
+                      ? "#1b2225 !important"
                       : "#b3b2b2 !important"
                     : "#663de5",
                   // color: "white !important",
