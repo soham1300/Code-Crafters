@@ -74,15 +74,25 @@ function Challenges(props) {
     return <div>Loading...</div>;
   }
 
-  function ChallengeCard({ isDarkMode, title, difficulty, lang, id }) {
+  function ChallengeCard({
+    isDarkMode,
+    title,
+    difficulty,
+    lang,
+    id,
+    challenge,
+  }) {
     return (
       <ChallengeSection
         isDarkMode={isDarkMode}
-        onClick={() => navigate(`/user/codingchallenges/${id}`)}
+        onClick={() => {
+          props.setSelectChallenge(challenge);
+          navigate(`/user/codingchallenges/${id}`);
+        }}
       >
         <ChallengeTitle>{title}</ChallengeTitle>
         <ChallengeInfo>
-          Language: {lang}, Reward: {difficulty * 5}
+          Language: {lang}, Reward: {difficulty * 5} points
         </ChallengeInfo>
         <ChallengeDifficulty>
           Difficulty: <Rating name="read-only" value={difficulty} readOnly />
@@ -148,6 +158,7 @@ function Challenges(props) {
                 difficulty={challenge[0].difficulty}
                 lang={challenge[0].lang}
                 id={challenge[1]}
+                challenge={challenge[0]}
                 key={index}
               />
             );
@@ -271,6 +282,7 @@ const ChallengeSection = styled.div`
     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
   }
   /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); */
+  cursor: pointer;
 `;
 
 const ChallengeTitle = styled.div`

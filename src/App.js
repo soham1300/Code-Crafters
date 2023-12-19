@@ -57,6 +57,7 @@ const useThemeDetector = () => {
 
 function App() {
   const { currentUser } = useContext(AuthContext);
+  const [selectChallenge, setSelectChallenge] = useState(null);
 
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
@@ -68,7 +69,7 @@ function App() {
     dark: {
       bg: "#1e2025",
       primary: "#1b2225",
-      secondry: "#29343d",
+      secondry: "#1A2731",
       text: "white",
     },
     light: {
@@ -177,7 +178,10 @@ function App() {
               path="challenges"
               element={
                 <ProtectedRoute>
-                  <Challenges toast={toast} />
+                  <Challenges
+                    toast={toast}
+                    setSelectChallenge={setSelectChallenge}
+                  />
                 </ProtectedRoute>
               }
             />
@@ -186,7 +190,10 @@ function App() {
                 path=":id"
                 element={
                   <ProtectedRoute>
-                    <CodingChallenges toast={toast} />
+                    <CodingChallenges
+                      toast={toast}
+                      selectChallenge={selectChallenge}
+                    />
                   </ProtectedRoute>
                 }
               />

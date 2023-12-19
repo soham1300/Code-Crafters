@@ -78,9 +78,7 @@ const HomeDiv = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props) =>
-    props.isDarkMode
-      ? (props) => props.theme.dark.bg
-      : (props) => props.theme.light.bg};
+    props.isDarkMode ? (props) => "#06141D" : (props) => "#F6F7F9"};
   /* position: fixed; */
 `;
 

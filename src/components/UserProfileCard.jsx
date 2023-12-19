@@ -94,7 +94,8 @@ export default UserProfileCard;
 
 const Card = styled.div`
   padding: 15px;
-  width: 100%;
+  margin: 15px;
+  width: 300px;
   background: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.secondry

@@ -16,7 +16,7 @@ function SideBar(props) {
 
   return (
     <Sidebar
-      backgroundColor={isDarkMode ? "#29343d" : "#D8D9DA"}
+      backgroundColor={isDarkMode ? "#1A2731" : "#D8D9DA"}
       style={{ height: "93vh", border: "none" }}
       collapsedWidth="3.5rem"
       collapsed={props.isMobile ? true : false}
@@ -36,7 +36,7 @@ function SideBar(props) {
                 fontWeight: active && "bold !important",
                 padding: "0.6rem",
                 margin: "0rem",
-                borderRadius: "0.6rem 0 0 0.6rem",
+                borderRadius: "0.6rem 0.6rem 0.6rem 0.6rem",
                 // border: active
                 //   ? isDarkMode
                 //     ? "1px solid white"

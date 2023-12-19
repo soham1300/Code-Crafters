@@ -22,6 +22,9 @@ import { AuthContext } from "../context/AuthContext";
 import { doc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 
+var bgColorDark = "#1A2731";
+var bgColorLight = "#D8D9DA";
+
 function ReviewCard({ review, reviewId }) {
   const isMobile = IsMobile();
   const [expanded, setExpanded] = useState(false);
@@ -76,12 +79,16 @@ function ReviewCard({ review, reviewId }) {
         width: isMobile ? "100%" : "80%",
         // border: isDarkMode ? "1px solid #e0e0e0" : "1px solid #000000",
         border: "none",
-        boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+        // boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+        borderRadius: "15px",
+        boxShadow:
+          "0 1px 1px hsl(0deg 0% 0% / 0.075),0 2px 2px hsl(0deg 0% 0% / 0.075),0 4px 4px hsl(0deg 0% 0% / 0.075),0 8px 8px hsl(0deg 0% 0% / 0.075),0 16px 16px hsl(0deg 0% 0% / 0.075)",
       }}
     >
       <CardHeader
         style={{
-          backgroundColor: isDarkMode ? "#1e2025" : "white",
+          // backgroundColor: isDarkMode ? "#1e2025" : "white",
+          backgroundColor: isDarkMode ? bgColorDark : bgColorLight,
           color: isDarkMode ? "white" : "black",
         }}
         avatar={<Avatar alt={review.displayName} src={review.photoURL} />}
@@ -96,7 +103,7 @@ function ReviewCard({ review, reviewId }) {
       />
       <CardContent
         style={{
-          backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
+          backgroundColor: isDarkMode ? bgColorDark : bgColorLight,
           color: isDarkMode ? "white" : "black",
         }}
       >
@@ -107,8 +114,9 @@ function ReviewCard({ review, reviewId }) {
       <CardMedia
         component="code"
         style={{
-          backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
+          backgroundColor: isDarkMode ? bgColorDark : bgColorLight,
           color: isDarkMode ? "white" : "black",
+          padding: "0 1rem ",
         }}
       >
         {review.type === "code" ? (
@@ -116,6 +124,7 @@ function ReviewCard({ review, reviewId }) {
             theme={isDarkMode ? githubDark : githubLight}
             value={review.code}
             maxHeight="50vh"
+            borderRadius="15px"
             extensions={[javascript({ jsx: true })]}
           />
         ) : (
@@ -126,7 +135,7 @@ function ReviewCard({ review, reviewId }) {
       <CardActions
         disableSpacing
         style={{
-          backgroundColor: isDarkMode ? "#16161a" : "#c5c6c7",
+          backgroundColor: isDarkMode ? bgColorDark : bgColorLight,
           color: isDarkMode ? "white" : "black",
         }}
       >
@@ -143,7 +152,7 @@ function ReviewCard({ review, reviewId }) {
         timeout="auto"
         unmountOnExit
         style={{
-          backgroundColor: isDarkMode ? "#1b2225" : "#c5c6c7",
+          backgroundColor: isDarkMode ? bgColorDark : bgColorLight,
           color: isDarkMode ? "white" : "black",
         }}
       >

@@ -196,8 +196,10 @@ const NewUsers = styled.div`
   margin-top: 7px;
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* display: grid; */
+  /* grid-template-columns: repeat(auto-fill, minmax(35  0px, 1fr)); */
+  display: flex;
+  flex-wrap: wrap;
   gap: 2vh;
   overflow: auto;
   place-items: center;
