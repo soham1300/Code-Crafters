@@ -20,6 +20,7 @@ function CodeReview(props) {
   const [lastDoc, setLastDoc] = useState();
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     try {
@@ -39,9 +40,14 @@ function CodeReview(props) {
       };
       fetchData();
     } catch {
-      props.toast.error("Something went wrong");
+      setError("Something went wrong");
     }
   }, []);
+
+  if (error) {
+    props.toast.error(error);
+  }
+
   console.log(reviews);
   // Load more reviews
   const loadMore = async () => {
@@ -197,11 +203,12 @@ const UploadCodeReviewBtn = styled.button`
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  border: 2px solid;
+  /* border: 2px solid;
   ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
-      : (props) => props.theme.light.text};
+      : (props) => props.theme.light.text}; */
+  border: 2px solid transparent;
   &:hover {
     cursor: pointer;
     border: 2px solid ${(props) => props.theme.mainColorHover};

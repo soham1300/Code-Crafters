@@ -24,6 +24,7 @@ function UserCodeReview({ toast }) {
   const [uploadedCode, setUploadedCode] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastDoc, setLastDoc] = useState();
+  const [error, setError] = useState(null);
 
   // useEffect(() => {
   //   const fetchUploadedCode = async () => {
@@ -65,7 +66,7 @@ function UserCodeReview({ toast }) {
       };
       fetchData();
     } catch {
-      toast.error("Something went wrong");
+      setError("Something went wrong");
     }
   }, []);
   // Load more reviews
@@ -91,6 +92,10 @@ function UserCodeReview({ toast }) {
       toast.error("No more code reviews available");
     }
   };
+
+  if (error) {
+    toast.error(error);
+  }
 
   function CodeReviewComp({ review, reviewId }) {
     return (

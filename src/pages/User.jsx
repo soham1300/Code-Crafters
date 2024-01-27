@@ -6,6 +6,12 @@ import SideBar from "../components/SideBar";
 import styled from "styled-components";
 import TopPanel from "../components/TopPanel";
 import IsMobile from "../components/IsMobile";
+// import BgImg from "../images/BgImg.png";
+// import BgImg from "../images/images.jpeg";
+
+// import BgImg from "../images/BgImg.png";
+// import BgImgDark from "../images/BgImgDark.jpg";
+
 // import Home from "./Home";
 // import Search from "./Search";
 // import CodeReview from "./CodeReview";
@@ -38,25 +44,27 @@ function User() {
     return <>Loading....</>;
   }
   return (
-    <HomeDiv isDarkMode={isDarkMode}>
-      {user.ban && (
-        <BannedMessage>
-          <img src={BanUser} alt="" srcset="" />
-          User is banned.
-        </BannedMessage>
-      )}
+    <HomeBg isDarkMode={isDarkMode}>
+      <HomeBgImg isDarkMode={isDarkMode}>
+        <HomeDiv isDarkMode={isDarkMode}>
+          {user.ban && (
+            <BannedMessage>
+              <img src={BanUser} alt="" srcset="" />
+              User is banned.
+            </BannedMessage>
+          )}
 
-      <TopPanelDiv>
-        <TopPanel />
-      </TopPanelDiv>
+          <TopPanelDiv>
+            <TopPanel />
+          </TopPanelDiv>
 
-      <MainDiv>
-        <div>
-          <SideBar isMobile={isMobile} />
-        </div>
-        <AllInfoDiv>
-          <AllInfo isDarkMode={isDarkMode}>
-            {/* <Home />
+          <MainDiv>
+            <div>
+              <SideBar isMobile={isMobile} />
+            </div>
+            <AllInfoDiv>
+              <AllInfo isDarkMode={isDarkMode}>
+                {/* <Home />
           <Search />
           <CodeReview />
           <Courses />
@@ -64,21 +72,37 @@ function User() {
           <Mentorship />
           <Jobs /> */}
 
-            <Outlet />
-          </AllInfo>
-        </AllInfoDiv>
-      </MainDiv>
-    </HomeDiv>
+                <Outlet />
+              </AllInfo>
+            </AllInfoDiv>
+          </MainDiv>
+        </HomeDiv>
+      </HomeBgImg>
+    </HomeBg>
   );
 }
 
 export default User;
 
+const HomeBg = styled.div`
+  background-color: ${(props) => (props.isDarkMode ? "black" : "white")};
+`;
+
+const HomeBgImg = styled.div`
+  background-color: ${(props) =>
+    props.isDarkMode ? "rgba(6, 20, 29)" : "rgba(246, 247, 249)"};
+
+  background-size: cover;
+`;
+
 const HomeDiv = styled.div`
   display: flex;
   flex-direction: column;
+  /* background-color: ${(props) =>
+    props.isDarkMode ? (props) => "#06141D" : (props) => "#F6F7F9"}; */
   background-color: ${(props) =>
-    props.isDarkMode ? (props) => "#06141D" : (props) => "#F6F7F9"};
+    props.isDarkMode ? "rgba(6, 20, 29, 0.8)" : "rgba(246, 247, 249, 0.8)"};
+  backdrop-filter: blur(50px); /* A
   /* position: fixed; */
 `;
 

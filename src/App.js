@@ -24,6 +24,7 @@ import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AddChallenges from "./pages/AddChallenges";
 import CodingChallenges from "./pages/CodingChallenges";
+import ChallengeLang from "./pages/ChallengeLang";
 
 export const ThemeContext = createContext();
 
@@ -185,6 +186,19 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="domain">
+              <Route
+                path=":lang"
+                element={
+                  <ProtectedRoute>
+                    <ChallengeLang
+                      toast={toast}
+                      setSelectChallenge={setSelectChallenge}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route path="codingchallenges">
               <Route
                 path=":id"

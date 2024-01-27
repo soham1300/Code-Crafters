@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { ThemeContext } from "../App";
-import { TbBrandPython } from "react-icons/tb";
-import { DiJavascript1 } from "react-icons/di";
-import { SiCplusplus, SiC } from "react-icons/si";
+// import { TbBrandPython } from "react-icons/tb";
+// import { DiJavascript1 } from "react-icons/di";
+// import { SiCplusplus, SiC } from "react-icons/si";
 import {
   collection,
   query,
@@ -15,13 +15,14 @@ import {
 import { db } from "../DB/FirebaseConfig";
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
+import SelectLangComp from "../components/SelectLangComp";
 
 function Challenges(props) {
   const { isDarkMode } = useContext(ThemeContext);
-  const [isActive, setIsActive] = useState("all");
   const [challenges, setChallenges] = useState([]);
   const [lastDoc, setLastDoc] = useState();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     try {
@@ -43,9 +44,14 @@ function Challenges(props) {
       };
       fetchData();
     } catch {
-      props.toast.error("Something went wrong");
+      setError("Something went wrong");
     }
   }, []);
+
+  if (error) {
+    props.toast.error(error);
+  }
+
   console.log(challenges);
   // Load more reviews
   const loadMore = async () => {
@@ -70,6 +76,7 @@ function Challenges(props) {
       props.toast("No more code reviews available");
     }
   };
+
   if (!challenges) {
     return <div>Loading...</div>;
   }
@@ -104,52 +111,37 @@ function Challenges(props) {
   return (
     <ChallengesDiv isDarkMode={isDarkMode}>
       <SelectLang>
-        <SelectLangTitle>Select Language</SelectLangTitle>
+        {/* <SelectLangTitle>Select Language</SelectLangTitle> */}
         <SelectLangSection>
-          <SelectlangSelect
-            isActive={isActive === "all"}
-            onClick={() => setIsActive("all")}
-            isDarkMode={isDarkMode}
-          >
-            All
-          </SelectlangSelect>
-          <SelectlangSelect
-            isActive={isActive === "c"}
-            onClick={() => setIsActive("c")}
-            isDarkMode={isDarkMode}
-          >
-            <SiC size={25} />
-            <>C Language</>
-          </SelectlangSelect>
-          <SelectlangSelect
-            isActive={isActive === "c++"}
-            onClick={() => setIsActive("c++")}
-            isDarkMode={isDarkMode}
-          >
-            <SiCplusplus size={25} />
-            C++
-          </SelectlangSelect>
-          <SelectlangSelect
-            isActive={isActive === "js"}
-            onClick={() => setIsActive("js")}
-            isDarkMode={isDarkMode}
-          >
-            <DiJavascript1 size={25} />
-            Javascript
-          </SelectlangSelect>
-          <SelectlangSelect
-            isActive={isActive === "py"}
-            onClick={() => setIsActive("py")}
-            isDarkMode={isDarkMode}
-          >
-            <TbBrandPython size={25} />
-            Python
-          </SelectlangSelect>
+          {/* C */}
+          <SelectLangComp
+            langNameShort="c"
+            langName="C language"
+            progress="30"
+          ></SelectLangComp>
+          {/* C++ */}
+          <SelectLangComp
+            langNameShort="c++"
+            langName="C++"
+            progress="30"
+          ></SelectLangComp>
+          {/* Js */}
+          <SelectLangComp
+            langNameShort="java"
+            langName="Java"
+            progress="30"
+          ></SelectLangComp>
+          {/* Py */}
+          <SelectLangComp
+            langNameShort="py"
+            langName="Python"
+            progress="30"
+          ></SelectLangComp>
         </SelectLangSection>
       </SelectLang>
       <ChallengesList>
-        <ChallengesListTitle>Challenges</ChallengesListTitle>
-        {challenges.map((challenge, index) => {
+        <ChallengesListTitle>New Challenges</ChallengesListTitle>
+        {/* {challenges.map((challenge, index) => {
           if (isActive === "all") {
             return (
               <ChallengeCard
@@ -170,10 +162,27 @@ function Challenges(props) {
                 difficulty={challenge[0].difficulty}
                 lang={challenge[0].lang}
                 id={challenge[1]}
+                challenge={challenge[0]}
                 key={index}
               />
             );
+          } else {
+            return null;
           }
+        })} */}
+
+        {challenges.map((challenge, index) => {
+          return (
+            <ChallengeCard
+              isDarkMode={isDarkMode}
+              title={challenge[0].title}
+              difficulty={challenge[0].difficulty}
+              lang={challenge[0].lang}
+              id={challenge[1]}
+              challenge={challenge[0]}
+              key={index}
+            />
+          );
         })}
       </ChallengesList>
       {challenges.length > 0 && challenges.length % 5 === 0 && (
@@ -212,42 +221,24 @@ const ChallengesDiv = styled.div`
   }
 `;
 const SelectLang = styled.div`
-  width: 20%;
+  width: 97%;
   padding: 20px;
 `;
 
-const SelectLangTitle = styled.p`
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-`;
+// const SelectLangTitle = styled.p`
+//   font-size: 1.2rem;
+//   font-weight: bold;
+//   margin-bottom: 10px;
+// `;
 
 const SelectLangSection = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-`;
+  flex-wrap: wrap;
 
-const SelectlangSelect = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
   align-items: center;
   justify-content: center;
-  padding: 20px 25%;
-  border: 1px solid
-    ${(props) =>
-      props.isDarkMode
-        ? (props) => props.theme.dark.text
-        : (props) => props.theme.light.text};
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: ${(props) =>
-    props.isActive ? (props) => props.theme.mainColor : "transparent"};
-  &:hover {
-    border: 1px solid ${(props) => props.theme.mainColor};
-    box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
-  }
+  gap: 30px;
+  width: 100%;
 `;
 
 const ChallengesList = styled.div`
@@ -263,20 +254,14 @@ const ChallengesListTitle = styled.p`
 const ChallengeSection = styled.div`
   background-color: ${(props) =>
     props.isDarkMode
-      ? (props) => props.theme.dark.primary
-      : (props) => props.theme.light.primary};
+      ? (props) => props.theme.dark.secondry
+      : (props) => props.theme.light.secondry};
   color: ${(props) =>
     props.isDarkMode ? props.theme.dark.text : props.theme.light.text};
   padding: 8px;
   margin: 10px 0;
   border-radius: 4px;
-  /* border: 1px solid
-    ${(props) =>
-    props.isDarkMode
-      ? (props) => props.theme.dark.text
-      : (props) => props.theme.light.text}; */
-  border: none;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.3);
   &:hover {
     border: 1px solid ${(props) => props.theme.mainColor};
     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};

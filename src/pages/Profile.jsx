@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
@@ -16,9 +16,11 @@ function Profile({ toast }) {
   const navigate = useNavigate();
   const { isDarkMode } = useContext(ThemeContext);
   const location = useLocation();
+  const [updateUserData, setUpdateUserData] = useState(null);
   const { userData, updateUser } = useContext(UserContext);
   const userId = params.userId;
   const { currentUser } = useContext(AuthContext);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     try {
@@ -30,15 +32,25 @@ function Profile({ toast }) {
         //   updateUser(doc.data());
         // });
         const userData = await getDoc(doc(db, "users", userId));
-        updateUser(userData.data());
+
+        setUpdateUserData(userData.data());
       };
       fetchData();
     } catch (error) {
-      toast.error("Error getting documents: ", error);
+      setError("Error getting documents: ", error);
     }
   }, [userId]);
+
+  if (updateUserData) {
+    updateUser(updateUserData);
+  }
+
   if (!userData) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    toast.error(error);
   }
 
   return (

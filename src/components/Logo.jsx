@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import LogoWhite from "../images/LogoWhite.png";
-import LogoDark from "../images/LogoDark.png";
+import LogoDark from "../images/LogoDark.svg";
 import { ThemeContext } from "../App";
 
 function Logo() {

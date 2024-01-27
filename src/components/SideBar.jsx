@@ -16,7 +16,9 @@ function SideBar(props) {
 
   return (
     <Sidebar
-      backgroundColor={isDarkMode ? "#1A2731" : "#D8D9DA"}
+      backgroundColor={
+        isDarkMode ? "rgb(26, 39, 49,0.6)" : "rgb(216, 217, 218, 0.6)"
+      }
       style={{ height: "93vh", border: "none" }}
       collapsedWidth="3.5rem"
       collapsed={props.isMobile ? true : false}
@@ -28,6 +30,7 @@ function SideBar(props) {
               return {
                 color: isDarkMode ? "#fff" : "#1b2225",
                 backgroundColor: active && "#663de5",
+
                 // ? isDarkMode
                 //   ? "#29343d !important"
                 //   : "#b3b2b2 !important"
@@ -35,14 +38,15 @@ function SideBar(props) {
                 boxShadow: active && "0 0 5px #663de5",
                 fontWeight: active && "bold !important",
                 padding: "0.6rem",
-                margin: "0rem",
+                margin: "0.5rem",
+
                 borderRadius: "0.6rem 0.6rem 0.6rem 0.6rem",
                 // border: active
                 //   ? isDarkMode
                 //     ? "1px solid white"
                 //     : "1px solid black"
                 //   : "none",
-
+                fontSize: "1.2rem",
                 "&:hover": {
                   backgroundColor: !active
                     ? isDarkMode

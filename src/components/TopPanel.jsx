@@ -39,9 +39,7 @@ const TopPanelDiv = styled.div`
   height: 7vh;
   width: 100%;
   background-color: ${(props) =>
-    props.isDarkMode
-      ? (props) => props.theme.dark.secondry
-      : (props) => props.theme.light.secondry};
+    props.isDarkMode ? "rgb(26, 39, 49,0.6)" : "rgb(216, 217, 218, 0.6)"};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -69,6 +67,7 @@ const TPRight = styled.div`
 
 const IsDarkModeBtn = styled.div`
   margin-right: 1rem;
+  text-align: center;
 `;
 
 const UserName = styled.p`

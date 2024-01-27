@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-github": "^4.21.13",
     "@uiw/react-codemirror": "^4.21.13",
+    "axios": "^1.6.5",
     "firebase": "^10.1.0",
     "firebase-admin": "^11.11.0",
     "random-gradient": "^0.0.2",

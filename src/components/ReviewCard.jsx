@@ -80,9 +80,10 @@ function ReviewCard({ review, reviewId }) {
         // border: isDarkMode ? "1px solid #e0e0e0" : "1px solid #000000",
         border: "none",
         // boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)",
+        boxShadow: "2px 2px 4px 0 rgba(0, 0, 0, 0.3)",
         borderRadius: "15px",
-        boxShadow:
-          "0 1px 1px hsl(0deg 0% 0% / 0.075),0 2px 2px hsl(0deg 0% 0% / 0.075),0 4px 4px hsl(0deg 0% 0% / 0.075),0 8px 8px hsl(0deg 0% 0% / 0.075),0 16px 16px hsl(0deg 0% 0% / 0.075)",
+        // boxShadow:
+        //   "0 1px 1px hsl(0deg 0% 0% / 0.075),0 2px 2px hsl(0deg 0% 0% / 0.075),0 4px 4px hsl(0deg 0% 0% / 0.075),0 8px 8px hsl(0deg 0% 0% / 0.075),0 16px 16px hsl(0deg 0% 0% / 0.075)",
       }}
     >
       <CardHeader

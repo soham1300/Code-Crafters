@@ -45,12 +45,12 @@ function LoginSignin(props) {
   };
 
   return (
-    <LoginSiginBG isDarkMode={isDarkMode}>
+    <LoginSigninBG isDarkMode={isDarkMode}>
       <Logo />
       <IsDarkModeBtn>
         <IsDarkMode />
       </IsDarkModeBtn>
-      <LoginSiginForm isDarkMode={isDarkMode}>
+      <LoginSigninForm isDarkMode={isDarkMode}>
         {/* Form elements */}
         <Title>Admin Login</Title>
 
@@ -75,14 +75,14 @@ function LoginSignin(props) {
         >
           Login
         </LoginBtn>
-      </LoginSiginForm>
-    </LoginSiginBG>
+      </LoginSigninForm>
+    </LoginSigninBG>
   );
 }
 
 export default LoginSignin;
 
-const LoginSiginBG = styled.div`
+const LoginSigninBG = styled.div`
   height: 100vh;
   width: 100vw;
   /* background-color: #1e2025; */
@@ -99,7 +99,7 @@ const LoginSiginBG = styled.div`
   align-items: center;
 `;
 
-const LoginSiginForm = styled.form`
+const LoginSigninForm = styled.form`
   width: 30%;
   height: 75%;
   display: flex;

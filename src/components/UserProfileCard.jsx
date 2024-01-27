@@ -108,7 +108,8 @@ const Card = styled.div`
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text}; */
   border: none;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); */
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.3);
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text

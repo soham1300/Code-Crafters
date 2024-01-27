@@ -14,9 +14,9 @@ function AddChallenges() {
   const [title, setTitle] = useState("");
   const [value, setValue] = useState(2);
   const languages = [
-    { value: "javascript", label: "JavaScript" },
-    { value: "python", label: "Python" },
-    { value: "c++", label: "C++" },
+    { value: "java", label: "Java" },
+    { value: "python3", label: "Python" },
+    { value: "cpp", label: "C++" },
     { value: "c", label: "C" },
   ];
 

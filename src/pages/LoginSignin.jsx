@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Logo from "../components/Logo";
 import IsDarkMode from "../components/IsDarkMode";
@@ -37,11 +37,10 @@ function LoginSignin(props) {
   const { currentUser } = useContext(AuthContext);
   const isLogin = props.isLogin;
 
-  useEffect(() => {
-    if (currentUser && currentUser.email !== "admin@gmail.com") {
-      navigate("/user/home");
-    }
-  }, [currentUser]);
+  if (currentUser && currentUser.email !== "admin@gmail.com") {
+    navigate("/user/home");
+  }
+
   console.log(currentUser);
 
   const checkUsername = async () => {
@@ -135,7 +134,7 @@ function LoginSignin(props) {
   };
 
   return (
-    <LoginSiginBG isDarkMode={isDarkMode}>
+    <LoginSigninBG isDarkMode={isDarkMode}>
       <Logo />
       <IsDarkModeBtn>
         <IsDarkMode />
@@ -150,7 +149,7 @@ function LoginSignin(props) {
           <SmallText>Let's get coding!</SmallText>
         </SignupText>
 
-        <LoginSiginForm isDarkMode={isDarkMode}>
+        <LoginSigninForm isDarkMode={isDarkMode}>
           {/* Form elements */}
           <Title>{isLogin ? "Login" : "Sign Up"}</Title>
           <UserNameInput
@@ -201,15 +200,15 @@ function LoginSignin(props) {
               ? "Don't have account? Sign Up"
               : "Already have account? Login"}
           </IsItLogin>
-        </LoginSiginForm>
+        </LoginSigninForm>
       </LoginSiginDiv>
-    </LoginSiginBG>
+    </LoginSigninBG>
   );
 }
 
 export default LoginSignin;
 
-const LoginSiginBG = styled.div`
+const LoginSigninBG = styled.div`
   height: 100vh;
   width: 100vw;
   /* background-color: #1e2025; */
@@ -245,7 +244,7 @@ const LoginSiginDiv = styled.div`
   }
 `;
 
-const LoginSiginForm = styled.form`
+const LoginSigninForm = styled.form`
   width: 50%;
   height: 100%;
   display: flex;
