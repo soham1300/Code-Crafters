@@ -79,7 +79,7 @@ function App() {
       secondry: "#D8D9DA",
       text: "#1e2025",
     },
-    mainColor: "#663de5",
+    mainColor: "#754CCB",
     mainColorHover: "#452b96",
   };
   return (

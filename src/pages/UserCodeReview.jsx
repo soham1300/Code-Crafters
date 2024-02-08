@@ -7,14 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { db } from "../DB/FirebaseConfig";
 // import { doc, getDoc } from "firebase/firestore";
 import ReviewCard from "../components/ReviewCard";
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-} from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 function UserCodeReview({ toast }) {
   const navigate = useNavigate();
@@ -23,75 +16,81 @@ function UserCodeReview({ toast }) {
   const { currentUser } = useContext(AuthContext);
   const [uploadedCode, setUploadedCode] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [lastDoc, setLastDoc] = useState();
+
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchUploadedCode = async () => {
-  //     if (userData.codeReview) {
-  //       const codeReviewData = await Promise.all(
-  //         userData.codeReview.map(async (codeReviewId) => {
-  //           const reviewData = await getDoc(
-  //             doc(db, "codeReview", codeReviewId)
-  //           );
-  //           return [reviewData.data(), codeReviewId];
-  //         })
-  //       );
-  //       setUploadedCode(codeReviewData);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchUploadedCode();
-  // }, [userData.codeReview]);
-
   useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const first = query(
-          collection(db, "codeReview"),
-          orderBy("timestamp"),
-          limit(5)
-        );
-        const documentSnapshots = await getDocs(first);
+    const fetchUploadedCode = async () => {
+      if (userData.codeReview) {
+        try {
+          const codeReviewData = await Promise.all(
+            userData.codeReview.map(async (codeReviewId) => {
+              const reviewData = await getDoc(
+                doc(db, "codeReview", codeReviewId)
+              );
+              return [reviewData.data(), codeReviewId];
+            })
+          );
+          setUploadedCode(codeReviewData);
+          setLoading(false);
+        } catch (e) {
+          setError("Something went wrong");
+        }
+      }
+    };
 
-        // Get last visible document
-        setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+    fetchUploadedCode();
+  }, [userData.codeReview]);
 
-        // Get data for first 10 documents
-        setUploadedCode(
-          documentSnapshots.docs.map((doc) => [doc.data(), doc.id])
-        );
-        setLoading(false);
-      };
-      fetchData();
-    } catch {
-      setError("Something went wrong");
-    }
-  }, []);
-  // Load more reviews
-  const loadMore = async () => {
-    try {
-      const next = query(
-        collection(db, "codeReview"),
-        orderBy("timestamp"),
-        startAfter(lastDoc),
-        limit(5)
-      );
-      const documentSnapshots = await getDocs(next);
+  console.log(userData);
 
-      // Get last document
-      setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       const first = query(
+  //         collection(db, "codeReview"),
+  //         orderBy("timestamp"),
+  //         limit(5)
+  //       );
+  //       const documentSnapshots = await getDocs(first);
 
-      // Append to existing reviews
-      setUploadedCode((prevReviews) => [
-        ...prevReviews,
-        ...documentSnapshots.docs.map((doc) => [doc.data(), doc.id]),
-      ]);
-    } catch {
-      toast.error("No more code reviews available");
-    }
-  };
+  //       // Get last visible document
+  //       setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+
+  //       // Get data for first 10 documents
+  //       setUploadedCode(
+  //         documentSnapshots.docs.map((doc) => [doc.data(), doc.id])
+  //       );
+  //       setLoading(false);
+  //     };
+  //     fetchData();
+  //   } catch {
+  //     setError("Something went wrong");
+  //   }
+  // }, []);
+  // // Load more reviews
+  // const loadMore = async () => {
+  //   try {
+  //     const next = query(
+  //       collection(db, "codeReview"),
+  //       orderBy("timestamp"),
+  //       startAfter(lastDoc),
+  //       limit(5)
+  //     );
+  //     const documentSnapshots = await getDocs(next);
+
+  //     // Get last document
+  //     setLastDoc(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+
+  //     // Append to existing reviews
+  //     setUploadedCode((prevReviews) => [
+  //       ...prevReviews,
+  //       ...documentSnapshots.docs.map((doc) => [doc.data(), doc.id]),
+  //     ]);
+  //   } catch {
+  //     toast.error("No more code reviews available");
+  //   }
+  // };
 
   if (error) {
     toast.error(error);
@@ -131,11 +130,11 @@ function UserCodeReview({ toast }) {
                     />
                   ))}
                 </CodeReviewComponent>
-                {uploadedCode.length > 0 && uploadedCode.length % 5 === 0 && (
+                {/* {uploadedCode.length > 0 && uploadedCode.length % 5 === 0 && (
                   <LoadMoreBtn onClick={loadMore} isDarkMode={isDarkMode}>
                     Load More
                   </LoadMoreBtn>
-                )}
+                )} */}
               </>
             )
           )}
@@ -154,14 +153,14 @@ const UserCodeReviewDiv = styled.div`
 
 const UploadCodeReviewBtn = styled.button`
   margin: 20px;
-  padding: 10px 20px;
+  padding: 15px 20px;
   border-radius: 5px;
   background-color: ${(props) => props.theme.mainColor};
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  border: 2px solid;
+  border: none;
   display: ${(props) => (props.isCurrentUser ? "block" : "none")};
   ${(props) =>
     props.isDarkMode
@@ -203,32 +202,32 @@ const CodeReviewComponent = styled.div`
   width: 90%;
 `;
 
-const LoadMoreBtn = styled.button`
-  margin: 10px;
-  padding: 10px 20px;
-  border-radius: 5px;
-  height: 7vh;
-  width: 8vw;
-  background-color: ${(props) =>
-    props.isEnterCode ? (props) => props.theme.mainColor : "transparent"};
-  color: ${(props) =>
-    props.isDarkMode
-      ? (props) => props.theme.dark.text
-      : (props) => props.theme.light.text};
-  border: 2px solid
-    ${(props) =>
-      props.isDarkMode
-        ? (props) => props.theme.dark.text
-        : (props) => props.theme.light.text};
-  &:hover {
-    cursor: pointer;
-    border: 2px solid ${(props) => props.theme.mainColorHover};
-    box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
-    background-color: ${(props) => props.theme.mainColor};
-  }
-  @media (max-width: 768px) {
-    height: auto;
-    width: auto;
-    margin: 0 30vw;
-  }
-`;
+// const LoadMoreBtn = styled.button`
+//   margin: 10px;
+//   padding: 10px 20px;
+//   border-radius: 5px;
+//   height: 7vh;
+//   width: 8vw;
+//   background-color: ${(props) =>
+//     props.isEnterCode ? (props) => props.theme.mainColor : "transparent"};
+//   color: ${(props) =>
+//     props.isDarkMode
+//       ? (props) => props.theme.dark.text
+//       : (props) => props.theme.light.text};
+//   border: 2px solid
+//     ${(props) =>
+//       props.isDarkMode
+//         ? (props) => props.theme.dark.text
+//         : (props) => props.theme.light.text};
+//   &:hover {
+//     cursor: pointer;
+//     border: 2px solid ${(props) => props.theme.mainColorHover};
+//     box-shadow: 0 0 5px ${(props) => props.theme.mainColor};
+//     background-color: ${(props) => props.theme.mainColor};
+//   }
+//   @media (max-width: 768px) {
+//     height: auto;
+//     width: auto;
+//     margin: 0 30vw;
+//   }
+// `;

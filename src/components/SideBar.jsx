@@ -19,8 +19,12 @@ function SideBar(props) {
       backgroundColor={
         isDarkMode ? "rgb(26, 39, 49,0.6)" : "rgb(216, 217, 218, 0.6)"
       }
-      style={{ height: "93vh", border: "none" }}
-      collapsedWidth="3.5rem"
+      style={{
+        height: "93vh",
+        border: "0px",
+        borderRight: "0px solid #2B2E36",
+      }}
+      collapsedWidth="4rem"
       collapsed={props.isMobile ? true : false}
     >
       <Menu
@@ -29,13 +33,13 @@ function SideBar(props) {
             if (level === 0) {
               return {
                 color: isDarkMode ? "#fff" : "#1b2225",
-                backgroundColor: active && "#663de5",
+                backgroundColor: active && "rgb(117,76,203)",
 
                 // ? isDarkMode
                 //   ? "#29343d !important"
                 //   : "#b3b2b2 !important"
                 // : undefined,
-                boxShadow: active && "0 0 5px #663de5",
+                boxShadow: active && "0 0 5px rgb(117,76,203)",
                 fontWeight: active && "bold !important",
                 padding: "0.6rem",
                 margin: "0.5rem",
@@ -50,9 +54,9 @@ function SideBar(props) {
                 "&:hover": {
                   backgroundColor: !active
                     ? isDarkMode
-                      ? "#1b2225 !important"
+                      ? "#1B1D22 !important"
                       : "#b3b2b2 !important"
-                    : "#663de5",
+                    : "rgb(85, 56, 148)",
                   // color: "white !important",
                   fontWeight: "bold !important",
                 },

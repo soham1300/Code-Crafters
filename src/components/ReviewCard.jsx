@@ -175,11 +175,12 @@ function ReviewCard({ review, reviewId }) {
               background: "#333",
             },
           }}
+          style={{ borderBottom: "0.5px solid #888" }}
         >
-          {reviews.reviews.length > 1 &&
+          {reviews.reviews.length > 1 ? (
             reviews.reviews.map((review, index) => {
               return (
-                <div key={index}>
+                <ReviewDiv key={index}>
                   <ReviewUserData>
                     <Avatar
                       alt={review.userName}
@@ -191,11 +192,14 @@ function ReviewCard({ review, reviewId }) {
                     </Typography>
                   </ReviewUserData>
                   <ReviewData>{review.userReview}</ReviewData>
-                </div>
+                </ReviewDiv>
               );
-            })}
+            })
+          ) : (
+            <NoReviewText>No Review Available!!!</NoReviewText>
+          )}
         </CardContent>
-        <hr />
+
         <AddReview>
           <ReviewInput
             isDarkMode={isDarkMode}
@@ -215,7 +219,7 @@ function ReviewCard({ review, reviewId }) {
 export default ReviewCard;
 
 const ReviewInput = styled.input.attrs({
-  type: "url",
+  type: "text",
   placeholder: "Enter your review on code",
 })`
   width: 93%;
@@ -241,6 +245,7 @@ const AddReview = styled.div`
   flex-direction: row;
   margin-bottom: 5px;
   align-items: center;
+  padding-left: 12px;
 `;
 
 const ReviewUserData = styled.div`
@@ -258,3 +263,9 @@ const CodeReviewLink = styled.a`
   color: ${(props) => props.theme.mainColor};
   margin-left: 15px;
 `;
+
+const NoReviewText = styled.p`
+  text-align: center;
+  font-size: 1.5rem;
+`;
+const ReviewDiv = styled.div``;
