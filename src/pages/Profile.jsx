@@ -58,8 +58,7 @@ function Profile({ toast }) {
   const [languages, setLanguages] = useState([]);
   const iconContainerRef = useRef(null); // Reference to the DOM element where the icon will be displayed
   const [repos, setRepos] = useState([]);
-  const token =
-    "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";
+  const token = "your_github_token_here"; // Replace with your GitHub token
 
   useEffect(() => {
     try {
