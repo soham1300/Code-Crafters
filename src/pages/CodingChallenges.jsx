@@ -7,6 +7,10 @@ import { javascript } from "@codemirror/lang-javascript";
 import axios from "axios";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import CircularProgress from "@mui/material/CircularProgress";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { AuthContext } from "../context/AuthContext";
+import { db } from "../DB/FirebaseConfig";
+import { useParams } from "react-router-dom";
 
 function CodingChallenges({ selectChallenge }) {
   const { isDarkMode } = useContext(ThemeContext);
@@ -16,6 +20,8 @@ function CodingChallenges({ selectChallenge }) {
   const [cpuTime, setCpuTime] = useState("");
   const [memory, setMemory] = useState("");
   const lang = selectChallenge.lang;
+  const { currentUser } = useContext(AuthContext);
+  const params = useParams();
 
   const onChange = useCallback((value, viewUpdate) => {
     console.log("value:", value);
@@ -47,6 +53,16 @@ function CodingChallenges({ selectChallenge }) {
       setMemory(response.data.memory);
       setOutput(response.data.output);
       console.log(response.data.output);
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        codeChallenges: arrayUnion({
+          challengeId: params.id,
+          timestamp: new Date(),
+          cpuTime: response.data.cpuTime,
+          memory: response.data.memory,
+          output: response.data.output,
+          language: lang,
+        }),
+      });
     } catch (error) {
       console.error(error);
     }

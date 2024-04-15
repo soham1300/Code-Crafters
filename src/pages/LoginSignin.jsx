@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../App";
 import { AuthContext } from "../context/AuthContext";
 import validator from "validator";
+import LoginAnimationImg from "../images/LoginAnimationImg.json";
+import * as LottiePlayer from "@lottiefiles/lottie-player";
 
 function LoginSignin(props) {
   // const [isLogin, setIsLogin] = useState(props.login);
@@ -142,11 +144,22 @@ function LoginSignin(props) {
 
       <LoginSiginDiv isDarkMode={isDarkMode}>
         <SignupText>
-          <LoginImg src={Loginimg} alt="login-image" />
-          <h2>
+          {/* <LoginImg
+            src="https://lottie.host/embed/039c7a53-3488-4847-af2e-53c5ce245f38/rJEPLk9TsU.json"
+            alt="login-image"
+          /> */}
+          <LoginImg>
+            <lottie-player
+              autoplay
+              loop
+              mode="normal"
+              src="https://lottie.host/039c7a53-3488-4847-af2e-53c5ce245f38/rJEPLk9TsU.json"
+            ></lottie-player>
+          </LoginImg>
+          {/* <h2>
             Blast off 🚀 into orbit and rocket up ⬆️ your coding skills here!
           </h2>
-          <SmallText>Let's get coding!</SmallText>
+          <SmallText>Let's get coding!</SmallText> */}
         </SignupText>
 
         <LoginSigninForm isDarkMode={isDarkMode}>
@@ -284,21 +297,7 @@ const SignupText = styled.div`
   }
 `;
 
-const LoginImg = styled.img`
-  width: 75%;
-  animation: float 3s ease-in-out infinite;
-
-  @keyframes float {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-    100% {
-      transform: translateY(0);
-    }
-  }
+const LoginImg = styled.div`
   @media (max-width: 768px) {
     z-index: 5;
     margin-top: -70px;

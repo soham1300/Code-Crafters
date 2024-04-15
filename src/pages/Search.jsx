@@ -165,6 +165,7 @@ const SearchDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
@@ -175,21 +176,26 @@ const SearchInput = styled.input.attrs({
   type: "text",
   placeholder: "Search",
 })`
-  width: 95%;
+  width: 90%;
   height: 5vh;
   padding-left: 1vw;
   font-size: 20px;
   /* border-bottom: #cccccc; */
   border: none;
-  background-color: transparent;
+  background-color: ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.secondry
+      : (props) => props.theme.light.secondry};
+  border: solid 1px #5e5e5e;
+  border-radius: 50px;
   color: ${(props) =>
     props.isDarkMode
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
-  &:focus {
+  /* &:focus {
     outline: none;
     border: none;
-  }
+  } */
 `;
 
 const NewUsers = styled.div`
@@ -277,9 +283,11 @@ const UserTitle = styled.h2`
 const SearchInputAbove = styled.div`
   width: 100%;
   padding: 10px 0;
-  border-bottom: 1px solid
-    ${(props) =>
-      props.isDarkMode
-        ? (props) => props.theme.dark.text
-        : (props) => props.theme.light.text};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.text
+      : (props) => props.theme.light.text};
 `;

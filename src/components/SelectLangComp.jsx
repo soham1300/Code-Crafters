@@ -21,7 +21,18 @@ export default function SelectLangComp({ langName, progress, langNameShort }) {
         <UpText>Problem Solving</UpText>
         <LangName>{langName}</LangName>
         <Box sx={{ width: "90%", padding: "15px 0" }}>
-          <LinearProgress variant="determinate" value={progress} />
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              color: "red",
+              marginTop: "5px",
+              backgroundColor: "white",
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#754CCB",
+              },
+            }}
+          />
         </Box>
         <Progress>{progress}%</Progress>
         <SelectLangBtn isDarkMode={isDarkMode}>Solve</SelectLangBtn>

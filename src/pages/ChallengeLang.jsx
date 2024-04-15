@@ -144,7 +144,7 @@ function ChallengeLang(props) {
               marginTop: "5px",
               backgroundColor: "white",
               "& .MuiLinearProgress-bar": {
-                backgroundColor: "#663de5",
+                backgroundColor: "#754CCB",
               },
             }}
           />

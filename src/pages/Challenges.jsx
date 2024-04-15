@@ -11,11 +11,14 @@ import {
   limit,
   getDocs,
   startAfter,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { db } from "../DB/FirebaseConfig";
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
 import SelectLangComp from "../components/SelectLangComp";
+import { AuthContext } from "../context/AuthContext";
 
 function Challenges(props) {
   const { isDarkMode } = useContext(ThemeContext);
@@ -23,6 +26,12 @@ function Challenges(props) {
   const [lastDoc, setLastDoc] = useState();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const { currentUser } = useContext(AuthContext);
+  const [challangeLang, setChallangeLang] = useState();
+  const [cChallenges, setCChallenges] = useState([]);
+  const [cppChallenges, setCppChallenges] = useState([]);
+  const [javaChallenges, setJavaChallenges] = useState([]);
+  const [pythonChallenges, setPythonChallenges] = useState([]);
 
   useEffect(() => {
     try {
@@ -41,12 +50,46 @@ function Challenges(props) {
         setChallenges(
           documentSnapshots.docs.map((doc) => [doc.data(), doc.id])
         );
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        const challengesData = docSnap.data().codeChallenges;
+        setChallangeLang(challengesData);
+        // Separate challenges based on their language
+        const cChallengesData = challengesData.filter(
+          (challenge) => challenge.language === "c"
+        );
+        setCChallenges(cChallengesData);
+
+        const cppChallengesData = challengesData.filter(
+          (challenge) => challenge.language === "c++"
+        );
+        setCppChallenges(cppChallengesData);
+
+        const javaChallengesData = challengesData.filter(
+          (challenge) => challenge.language === "java"
+        );
+        setJavaChallenges(javaChallengesData);
+
+        const pythonChallengesData = challengesData.filter(
+          (challenge) => challenge.language === "py"
+        );
+        setPythonChallenges(pythonChallengesData);
       };
       fetchData();
     } catch {
       setError("Something went wrong");
     }
-  }, []);
+  }, [currentUser.uid]);
+
+  const challengesByLanguage = challenges.reduce((acc, challenge) => {
+    const language = challenge.language;
+    if (!acc[language]) {
+      acc[language] = [];
+    }
+    acc[language].push(challenge);
+    return acc;
+  }, {});
+  console.log(challengesByLanguage[0]);
 
   if (error) {
     props.toast.error(error);
@@ -117,25 +160,25 @@ function Challenges(props) {
           <SelectLangComp
             langNameShort="c"
             langName="C language"
-            progress="30"
+            progress={(cChallenges.length / challenges.length) * 100}
           ></SelectLangComp>
           {/* C++ */}
           <SelectLangComp
             langNameShort="c++"
             langName="C++"
-            progress="30"
+            progress={(cppChallenges.length / challenges.length) * 100}
           ></SelectLangComp>
           {/* Js */}
           <SelectLangComp
             langNameShort="java"
             langName="Java"
-            progress="30"
+            progress={(javaChallenges.length / challenges.length) * 100}
           ></SelectLangComp>
           {/* Py */}
           <SelectLangComp
             langNameShort="py"
             langName="Python"
-            progress="30"
+            progress={(pythonChallenges.length / challenges.length) * 100}
           ></SelectLangComp>
         </SelectLangSection>
       </SelectLang>
@@ -206,6 +249,7 @@ const ChallengesDiv = styled.div`
       ? (props) => props.theme.dark.text
       : (props) => props.theme.light.text};
   overflow: auto;
+  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 10px;
   }

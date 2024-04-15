@@ -20,36 +20,42 @@ function Courses() {
         <Option
           activeOption={activeOption === "AllTopics"}
           onClick={() => setActiveOption("AllTopics")}
+          isDarkMode={isDarkMode}
         >
           All Topics
         </Option>
         <Option
           activeOption={activeOption === "HTML"}
           onClick={() => setActiveOption("HTML")}
+          isDarkMode={isDarkMode}
         >
           HTML
         </Option>
         <Option
           activeOption={activeOption === "CSS"}
           onClick={() => setActiveOption("CSS")}
+          isDarkMode={isDarkMode}
         >
           CSS
         </Option>
         <Option
           activeOption={activeOption === "Javascript"}
           onClick={() => setActiveOption("Javascript")}
+          isDarkMode={isDarkMode}
         >
           Javascript
         </Option>
         <Option
           activeOption={activeOption === "React"}
           onClick={() => setActiveOption("React")}
+          isDarkMode={isDarkMode}
         >
           React
         </Option>
         <Option
           activeOption={activeOption === "Popular"}
           onClick={() => setActiveOption("Popular")}
+          isDarkMode={isDarkMode}
         >
           Popular
         </Option>
@@ -95,9 +101,15 @@ const OptionsDiv = styled.div`
 `;
 
 const Option = styled.div`
-  border: 1px solid white;
+  /* border: 1px solid white; */
+  border: ${(props) =>
+    props.activeOption
+      ? props.theme.mainColor
+      : props.isDarkMode
+      ? "1px solid white"
+      : "1px solid black"};
   font-size: 1.5rem;
-  color: white;
+  color: ${(props) => (props.isDarkMode ? "white" : "black")};
   width: 10%;
   padding: 12px;
   text-align: center;
