@@ -10,46 +10,12 @@ import { UserContext } from "../context/UserContex";
 import { AuthContext } from "../context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../DB/FirebaseConfig";
-
-function getIconUrl(langName) {
-  const apiKey = "FPSXeac18f5976374138b90d5325de7c3745"; // Replace with your Flaticon API key
-  const url = `https://api.flaticon.com/search/icons?term=${langName}&limit=1`;
-
-  return fetch(url, {
-    headers: {
-      Authorization: `Apikey ${apiKey}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.data.length > 0) {
-        return data.data[0].raster_sizes[0].url; // Get URL from first result
-      } else {
-        return null; // Return null if no icon found
-      }
-    })
-    .catch((error) => console.error(error));
-}
-
-function displayIcon(langName, targetElement) {
-  getIconUrl(langName).then((iconUrl) => {
-    if (iconUrl) {
-      const img = document.createElement("img");
-      img.src = iconUrl;
-      img.style.width = "24px"; // Set the width of the icon (adjust as needed)
-      img.style.height = "24px"; // Set the height of the icon (adjust as needed)
-      targetElement.appendChild(img); // Append the icon to the specified element
-    } else {
-      console.log(`Icon not found for ${langName}`);
-    }
-  });
-}
+import UserCodeReview from "./UserCodeReview";
 
 function Profile({ toast }) {
   const params = useParams();
   const navigate = useNavigate();
   const { isDarkMode } = useContext(ThemeContext);
-  const location = useLocation();
   const [updateUserData, setUpdateUserData] = useState(null);
   const { userData, updateUser } = useContext(UserContext);
   const userId = params.userId;
@@ -67,11 +33,16 @@ function Profile({ toast }) {
         const userData = await getDoc(doc(db, "users", userId));
         setUpdateUserData(userData.data());
 
-        fetch(`https://api.github.com/users/soham1300/repos`, {
-          headers: {
-            Authorization: token,
-          },
-        })
+        fetch(
+          `https://api.github.com/users/${
+            userData.data().githubUsername
+          }/repos`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
           .then((response) => response.json())
           .then(async (repos) => {
             const repositories = repos.map((repo) => ({
@@ -113,7 +84,7 @@ function Profile({ toast }) {
     updateUser(updateUserData);
   }
 
-  if (!userData) {
+  if (!updateUserData) {
     return <div>Loading...</div>;
   }
 
@@ -126,37 +97,44 @@ function Profile({ toast }) {
       <Card isDarkMode={isDarkMode}>
         <CoverPhoto
           gradient={gradient}
-          displayName={userData.displayName}
+          displayName={updateUserData.displayName}
           isDarkMode={isDarkMode}
-          uid={userData.uid}
+          uid={updateUserData.uid}
         >
-          <img src={userData.photoURL} alt={userData.displayName} />
+          <img src={updateUserData.photoURL} alt={updateUserData.displayName} />
         </CoverPhoto>
         <ProfileBtn>
           <ProfileData>
             <ProfileName isDarkMode={isDarkMode}>
-              {userData.displayName}
+              {updateUserData.displayName}
             </ProfileName>
-            <UserFollowData>0 Followers | 0 Following</UserFollowData>
+            {/* <UserFollowData>0 Followers | 0 Following</UserFollowData> */}
+            <UserFollowData>
+              Points: {updateUserData.points ? updateUserData.points : "0"}
+            </UserFollowData>
             <ProfileBio>
-              👋 New to Web Dev | Learning HTML, CSS, JavaScript | Passion for
-              creating web experiences | Let's connect! 🚀
+              {updateUserData.bio
+                ? updateUserData.bio
+                : "👩‍💻 Passionate Developer | Creating Innovative Solutions | Love for Coding and Problem Solving | Let's Build Something Amazing! 🚀"}
             </ProfileBio>
           </ProfileData>
           <Buttons>
             <Btn
               isDarkMode={isDarkMode}
-              isCurrentUser={userData.uid === currentUser.uid}
+              isCurrentUser={updateUserData.uid === currentUser.uid}
             >
               Follow
             </Btn>
             {/* <Btn isDarkMode={isDarkMode}>Message</Btn> */}
-            {userData.uid === currentUser.uid && (
-              <EditProfileBtn isDarkMode={isDarkMode}>
+            {updateUserData.uid === currentUser.uid && (
+              <EditProfileBtn
+                isDarkMode={isDarkMode}
+                onClick={() => navigate("/user/profile/editprofile")}
+              >
                 Edit Profile
               </EditProfileBtn>
             )}
-            {userData.uid === currentUser.uid && (
+            {updateUserData.uid === currentUser.uid && (
               <LogoutBtn
                 isDarkMode={isDarkMode}
                 onClick={() => {
@@ -176,50 +154,81 @@ function Profile({ toast }) {
           <PersonalInfoDiv isDarkMode={isDarkMode}>
             <UserData isDarkMode={isDarkMode}>
               <DataTitle>Email </DataTitle>
-              <Data>soham@gmail.com</Data>
+              <Data>
+                {updateUserData.email
+                  ? updateUserData.email
+                  : "Email not added!!"}
+              </Data>
             </UserData>
             <UserData isDarkMode={isDarkMode}>
               <DataTitle>Location </DataTitle>
-              <Data>Mumbai, India</Data>
+              <Data>
+                {updateUserData.location ? updateUserData.location : "-"}
+              </Data>
             </UserData>
             <UserData isDarkMode={isDarkMode}>
               <DataTitle>Gender </DataTitle>
-              <Data>Male</Data>
+              <Data>{updateUserData.gender ? updateUserData.gender : "-"}</Data>
             </UserData>
             <UserData isDarkMode={isDarkMode}>
               <DataTitle>Birth Date </DataTitle>
-              <Data>13/01/2004</Data>
+              <Data>
+                {updateUserData.birthDate ? updateUserData.birthDate : "-"}
+              </Data>
             </UserData>
             <UserData isDarkMode={isDarkMode}>
               <DataTitle>Work </DataTitle>
-              <Data>XYZ Company</Data>
+              <Data>
+                {updateUserData.currentWorkplace
+                  ? updateUserData.currentWorkplace
+                  : "-"}
+              </Data>
             </UserData>
           </PersonalInfoDiv>
         </UserSmallInfo>
+
         <UserSkillsInfo isDarkMode={isDarkMode}>
-          <Title>Skills </Title>
-          <AllLangDiv>
-            {languages.map((language) => (
-              <LangDiv key={language} isDarkMode={isDarkMode}>
-                {language}
-                <span ref={iconContainerRef}></span>
-                {/* Container for the icon */}
-              </LangDiv>
-            ))}
-          </AllLangDiv>
-          <Title>Projects </Title>
-          <AllReposDiv>
-            {repos.map((repo) => (
-              <RepoDiv key={repo.name} isDarkMode={isDarkMode}>
-                <RepoName isDarkMode={isDarkMode}>{repo.name}</RepoName>
-                <RepoBtn isDarkMode={isDarkMode} href={repo.url}>
-                  View Repo
-                </RepoBtn>
-              </RepoDiv>
-            ))}
-          </AllReposDiv>
+          {updateUserData.skills || updateUserData.githubUsername ? (
+            <>
+              <Title>Skills </Title>
+              <AllLangDiv>
+                {updateUserData.skills.map((language) => (
+                  <LangDiv key={language} isDarkMode={isDarkMode}>
+                    {language}
+                    <span ref={iconContainerRef}></span>
+                    {/* Container for the icon */}
+                  </LangDiv>
+                ))}
+                {languages.map((language) => (
+                  <LangDiv key={language} isDarkMode={isDarkMode}>
+                    {language}
+                    <span ref={iconContainerRef}></span>
+                    {/* Container for the icon */}
+                  </LangDiv>
+                ))}
+              </AllLangDiv>
+            </>
+          ) : null}
+          {updateUserData.githubUsername ? <Title>Projects </Title> : null}
+          {updateUserData.githubUsername ? (
+            <AllReposDiv>
+              {repos.map((repo) => (
+                <RepoDiv key={repo.name} isDarkMode={isDarkMode}>
+                  <RepoName isDarkMode={isDarkMode}>{repo.name}</RepoName>
+                  <RepoBtn isDarkMode={isDarkMode} href={repo.url}>
+                    View Repo
+                  </RepoBtn>
+                </RepoDiv>
+              ))}
+            </AllReposDiv>
+          ) : (
+            <NoGithubAddedDiv isDarkMode={isDarkMode}>
+              Github Profile Not Added
+            </NoGithubAddedDiv>
+          )}
         </UserSkillsInfo>
       </UserProfileData>
+      <UserCodeReview />
       <Outlet />
     </ProfileDiv>
   );
@@ -524,4 +533,22 @@ const RepoBtn = styled.a`
   &:hover {
     background-color: ${(props) => (props.isDarkMode ? "#444" : "#ddd")};
   }
+`;
+const NoGithubAddedDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${(props) => (props.isDarkMode ? "#fff" : "#333")};
+  font-size: 2.3rem;
+  margin: 12px;
+  text-align: center;
+  font-weight: bold;
+  background: ${(props) =>
+    props.isDarkMode
+      ? (props) => props.theme.dark.primary
+      : (props) => props.theme.light.primary};
+  border-radius: 5px;
+  padding: 12px;
 `;

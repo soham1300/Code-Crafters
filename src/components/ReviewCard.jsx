@@ -36,6 +36,34 @@ function ReviewCard({ review, reviewId }) {
 
   console.log("ReviewCard", review);
 
+  const ReviewData = ({ userReview, isDarkMode }) => {
+    // Split the userReview into segments of code blocks and regular text
+    const segments = userReview.split(/```([\s\S]*?)```/g);
+
+    return (
+      <>
+        {segments.map((segment, index) => {
+          // Check if the segment is a code block
+          const isCodeBlock = index % 2 !== 0;
+          if (isCodeBlock) {
+            return (
+              <CodeMirror
+                key={index}
+                theme={isDarkMode ? githubDark : githubLight}
+                value={segment}
+                extensions={[javascript({ jsx: true })]}
+                readOnly={true}
+              />
+            );
+          } else {
+            // Render regular text
+            return <span key={index}>{segment}</span>;
+          }
+        })}
+      </>
+    );
+  };
+
   useEffect(() => {
     onSnapshot(doc(db, "codeReview", reviewId), (doc) => {
       setReviews(doc.data());
@@ -127,6 +155,7 @@ function ReviewCard({ review, reviewId }) {
             maxHeight="50vh"
             borderRadius="15px"
             extensions={[javascript({ jsx: true })]}
+            readOnly={true}
           />
         ) : (
           <CodeReviewLink href={review.code}>{review.code}</CodeReviewLink>
@@ -140,13 +169,17 @@ function ReviewCard({ review, reviewId }) {
           color: isDarkMode ? "white" : "black",
         }}
       >
-        <RateReviewOutlinedIcon
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-          fontSize="medium"
-        />
+        <ReviewsCount>
+          <RateReviewOutlinedIcon
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+            // fontSize="medium"
+            style={{ color: "#8f8e8e" }}
+          />
+          {review.reviews.length}
+        </ReviewsCount>
       </CardActions>
       <Collapse
         in={expanded}
@@ -188,10 +221,15 @@ function ReviewCard({ review, reviewId }) {
                       sx={{ width: 24, height: 24 }}
                     />
                     <Typography>
-                      <strong>{review.userName}</strong>
+                      <ReviewUserName>{review.userName}</ReviewUserName>
                     </Typography>
                   </ReviewUserData>
-                  <ReviewData>{review.userReview}</ReviewData>
+                  <ReviewDataDiv>
+                    <ReviewData
+                      userReview={review.userReview}
+                      isDarkMode={isDarkMode}
+                    />
+                  </ReviewDataDiv>
                 </ReviewDiv>
               );
             })
@@ -254,7 +292,7 @@ const ReviewUserData = styled.div`
   gap: 5px;
 `;
 
-const ReviewData = styled.p`
+const ReviewDataDiv = styled.p`
   margin-left: 24px;
 `;
 
@@ -269,3 +307,22 @@ const NoReviewText = styled.p`
   font-size: 1.5rem;
 `;
 const ReviewDiv = styled.div``;
+
+const ReviewsCount = styled.div`
+  color: #8f8e8e;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const ReviewUserName = styled.p`
+  font-size: 1.1rem;
+  /* color: ${(props) => props.theme.mainColor}; */
+  font-weight: bold;
+  margin: 0;
+  padding: 0 10px;
+`;

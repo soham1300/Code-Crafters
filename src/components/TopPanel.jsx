@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Logo from "./Logo";
 import { styled } from "styled-components";
 import { ThemeContext } from "../App";
@@ -6,11 +6,31 @@ import { AuthContext } from "../context/AuthContext";
 import IsDarkMode from "./IsDarkMode";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../DB/FirebaseConfig";
+import { toast } from "react-toastify";
 
 function TopPanel({ admin }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { currentUser } = useContext(AuthContext);
+  const [updateUserData, setUpdateUserData] = useState({});
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const userData = await getDoc(doc(db, "users", currentUser.uid));
+        setUpdateUserData(userData.data());
+      };
+      fetchData();
+    } catch (error) {
+      setError("Error getting documents: ", error);
+    }
+  }, [currentUser.uid]);
+
+  if (error) {
+    toast.error(error);
+  }
   return (
     <TopPanelDiv isDarkMode={isDarkMode}>
       <div>
@@ -23,9 +43,12 @@ function TopPanel({ admin }) {
         {admin ? (
           <UserName>{admin}</UserName>
         ) : (
-          <User onClick={() => navigate(`/user/profile/${currentUser.uid}`)}>
-            <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
-            <UserName>{currentUser.displayName}</UserName>
+          <User onClick={() => navigate(`/user/profile/${updateUserData.uid}`)}>
+            <Avatar
+              alt={updateUserData.displayName}
+              src={updateUserData.photoURL}
+            />
+            <UserName>{updateUserData.displayName}</UserName>
           </User>
         )}
       </TPRight>

@@ -105,6 +105,7 @@ function Jobs() {
                   Location: {job.job_city}, {job.job_country}
                 </p>
                 <p>Employment Type: {job.job_employment_type}</p>
+                <p>Job Board: {job.job_publisher}</p>
                 {job.job_description.length > 100 ? (
                   <>
                     <JobDescription>
@@ -165,7 +166,7 @@ const SearchInputAbove = styled.div`
 
 const SearchInput = styled.input.attrs({
   type: "text",
-  placeholder: "Search",
+  placeholder: "Search Jobs",
 })`
   width: 90%;
   height: 5vh;

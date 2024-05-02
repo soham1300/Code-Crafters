@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useState } from "react";
+import React, { useContext, useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import { ThemeContext } from "../App";
 import CodeMirror from "@uiw/react-codemirror";
@@ -7,12 +7,14 @@ import { javascript } from "@codemirror/lang-javascript";
 import axios from "axios";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import CircularProgress from "@mui/material/CircularProgress";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { AuthContext } from "../context/AuthContext";
 import { db } from "../DB/FirebaseConfig";
 import { useParams } from "react-router-dom";
+import { UserContext } from "../context/UserContex";
+import { increment } from "firebase/firestore";
 
-function CodingChallenges({ selectChallenge }) {
+function CodingChallenges({ selectChallenge, toast }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [code, setCode] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false);
@@ -22,6 +24,20 @@ function CodingChallenges({ selectChallenge }) {
   const lang = selectChallenge.lang;
   const { currentUser } = useContext(AuthContext);
   const params = useParams();
+  const [updateUserData, setUpdateUserData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const userData = await getDoc(doc(db, "users", currentUser.uid));
+        setUpdateUserData(userData.data());
+      };
+      fetchData();
+    } catch (error) {
+      setError("Error getting documents: ", error);
+    }
+  }, [currentUser.uid]);
 
   const onChange = useCallback((value, viewUpdate) => {
     console.log("value:", value);
@@ -53,38 +69,57 @@ function CodingChallenges({ selectChallenge }) {
       setMemory(response.data.memory);
       setOutput(response.data.output);
       console.log(response.data.output);
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        codeChallenges: arrayUnion({
-          challengeId: params.id,
-          timestamp: new Date(),
-          cpuTime: response.data.cpuTime,
-          memory: response.data.memory,
-          output: response.data.output,
-          language: lang,
-        }),
-      });
+      if (selectChallenge.output === response.data.output) {
+        toast.success("Congratulations! You have solved the challenge.");
+        const newPoints = updateUserData.points
+          ? updateUserData.points + response.data.memory / 100
+          : response.data.memory / 100;
+
+        console.log("NewPoints", newPoints);
+        console.log("cpuTime", response.data.cpuTime);
+        console.log("memory", response.data.memory);
+        await updateDoc(doc(db, "users", updateUserData.uid), {
+          codeChallenges: arrayUnion({
+            challengeId: params.id,
+            timestamp: new Date(),
+            cpuTime: response.data.cpuTime,
+            memory: response.data.memory,
+            output: response.data.output,
+            language: lang,
+          }),
+          points: newPoints,
+        });
+      } else {
+        toast.error("Oops! You have not solved the challenge.");
+      }
     } catch (error) {
       console.error(error);
     }
   };
+  if (error) {
+    toast.error(error);
+  }
 
   return (
     <CodingChallengesDiv isDarkMode={isDarkMode}>
       <CodingChallengesDetails>
-        <ChallengeName>{selectChallenge.title} </ChallengeName>
-        <ChallengeTitle>Task </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
-        <ChallengeTitle>Note </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
-        <ChallengeTitle>Input Format </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
-        <ChallengeTitle>Output Format </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
-        <ChallengeTitle>Sample Input </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
-        <ChallengeTitle>Sample Output </ChallengeTitle>
-        <ChallengeDetails>Details </ChallengeDetails>
+        <ChallengeName>{selectChallenge.title}</ChallengeName>
+        {Object.entries(selectChallenge).map(
+          ([key, value]) =>
+            key !== "title" &&
+            key !== "task" &&
+            key !== "note" &&
+            key !== "input" && (
+              <React.Fragment key={key}>
+                <ChallengeTitle>
+                  {key.replace(/^\w/, (c) => c.toUpperCase())}
+                </ChallengeTitle>
+                <ChallengeDetails>{value}</ChallengeDetails>
+              </React.Fragment>
+            )
+        )}
       </CodingChallengesDetails>
+
       <SolveCodeDiv>
         <CodeMirrorDiv>
           <CodeMirror

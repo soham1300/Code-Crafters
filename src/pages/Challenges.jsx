@@ -53,28 +53,39 @@ function Challenges(props) {
         const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
         const challengesData = docSnap.data().codeChallenges;
+        console.log("Challenges Data:", challengesData);
+
+        if (!challengesData) {
+          return;
+        }
+
         setChallangeLang(challengesData);
         // Separate challenges based on their language
         const cChallengesData = challengesData.filter(
           (challenge) => challenge.language === "c"
         );
+        console.log("C Challenges Data:", cChallengesData);
         setCChallenges(cChallengesData);
 
         const cppChallengesData = challengesData.filter(
           (challenge) => challenge.language === "c++"
         );
+        console.log("C++ Challenges Data:", cppChallengesData);
         setCppChallenges(cppChallengesData);
 
         const javaChallengesData = challengesData.filter(
           (challenge) => challenge.language === "java"
         );
+        console.log("Java Challenges Data:", javaChallengesData);
         setJavaChallenges(javaChallengesData);
 
         const pythonChallengesData = challengesData.filter(
           (challenge) => challenge.language === "py"
         );
+        console.log("Python Challenges Data:", pythonChallengesData);
         setPythonChallenges(pythonChallengesData);
       };
+
       fetchData();
     } catch {
       setError("Something went wrong");

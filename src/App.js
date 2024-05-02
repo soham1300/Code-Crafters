@@ -25,6 +25,10 @@ import Admin from "./pages/Admin";
 import AddChallenges from "./pages/AddChallenges";
 import CodingChallenges from "./pages/CodingChallenges";
 import ChallengeLang from "./pages/ChallengeLang";
+import HomePage from "./pages/HomePage";
+import EditProfile from "./pages/EditProfile";
+import AddMentor from "./pages/AddMentor";
+import MentorshipChat from "./pages/MentorshipChat";
 
 export const ThemeContext = createContext();
 
@@ -87,6 +91,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <ToastContainer />
         <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route
             path="login"
             element={<LoginSignin toast={toast} isLogin={true} />}
@@ -216,7 +221,7 @@ function App() {
               path="mentorship"
               element={
                 <ProtectedRoute>
-                  <Mentorship />
+                  <Mentorship toast={toast} />
                 </ProtectedRoute>
               }
             />
@@ -236,28 +241,38 @@ function App() {
                     <Profile toast={toast} />
                   </ProtectedRoute>
                 }
-              >
-                <Route
-                  index
-                  element={
-                    <ProtectedRoute>
-                      <UserInfo toast={toast} />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="codereview"
-                  element={
-                    <ProtectedRoute>
-                      <UserCodeReview toast={toast} />
-                    </ProtectedRoute>
-                  }
-                />
-              </Route>
+              />
+
+              <Route
+                path="editprofile"
+                element={
+                  <ProtectedRoute>
+                    <EditProfile toast={toast} />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route
+              path="addmentor"
+              element={
+                <ProtectedRoute>
+                  <AddMentor toast={toast} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="mentor">
+              <Route
+                path=":mentorshipId"
+                element={
+                  <ProtectedRoute>
+                    <MentorshipChat toast={toast} />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
           </Route>
 
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="" />} />
         </Routes>
       </ThemeProvider>
     </IsDarkThemeProvider>
